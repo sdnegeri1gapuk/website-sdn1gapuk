@@ -349,7 +349,7 @@ export const GradeManager: React.FC = () => {
           else finalExt = 'png'; // default to png, but webp is not supported
 
           const { width, height } = await getImageDimensions(base64Content);
-          const base64Data = base64Content.split(',')[1] || base64Content;
+          const base64Data = (base64Content || '').split(',')[1] || base64Content;
           
           const imageId = workbook.addImage({
             base64: base64Data,

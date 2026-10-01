@@ -109,7 +109,7 @@ export default function App() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeTab, setActiveTab] = useState('Senin');
+  const [activeTab, setActiveTab] = useState('ALL');
   const [selectedGrade, setSelectedGrade] = useState('Kelas 1');
   
   // Contact Form State
@@ -221,7 +221,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 w-full max-w-full overflow-x-hidden">
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'}`}>
         <div className="max-w-7xl mx-auto px-4 md:px-8 flex justify-between items-center">
@@ -249,6 +249,7 @@ export default function App() {
             <NavLink href="#berita" scrolled={scrolled}>{t.nav.news}</NavLink>
             <NavLink href="#staf" scrolled={scrolled}>{t.nav.staf}</NavLink>
             <NavLink href="#jadwal" scrolled={scrolled}>{t.nav.jadwal}</NavLink>
+            <NavLink href="#ekstrakurikuler" scrolled={scrolled}>{t.extra.title}</NavLink>
             <NavLink href="#galeri" scrolled={scrolled}>{t.nav.galeri}</NavLink>
             
             {/* Language Switcher */}
@@ -305,6 +306,7 @@ export default function App() {
               <NavLink href="#berita" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.nav.news}</NavLink>
               <NavLink href="#staf" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.nav.staf}</NavLink>
               <NavLink href="#jadwal" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.nav.jadwal}</NavLink>
+              <NavLink href="#ekstrakurikuler" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.extra.title}</NavLink>
               <NavLink href="#galeri" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.nav.galeri}</NavLink>
               <NavLink href="#kontak" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.nav.contact}</NavLink>
             </motion.div>
@@ -651,145 +653,209 @@ export default function App() {
           </div>
         </section>
 
-        {/* Schedule & Extra Section */}
-        <section id="jadwal" className="py-24 max-w-7xl mx-auto px-4 md:px-8">
-          <div className="grid lg:grid-cols-2 gap-20">
-            {/* Class Schedule */}
-            <div>
-              <div className="mb-10">
-                <h2 className="text-3xl font-bold text-blue-950 mb-4">{t.schedule.title}</h2>
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {Array.from(new Set(scheduleData.map(s => s.grade))).sort().map(grade => (
-                    <button
-                      key={grade}
-                      onClick={() => setSelectedGrade(grade)}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                        selectedGrade === grade 
-                        ? 'bg-blue-900 shadow-md text-white' 
-                        : 'bg-white text-slate-400 hover:bg-slate-100 border border-slate-100'
-                      }`}
-                    >
-                      {grade}
-                    </button>
-                  ))}
-                  {scheduleData.length === 0 && (
-                    <p className="text-slate-400 text-xs italic">{t.news.empty}</p>
-                  )}
-                </div>
-                <p className="text-slate-500 text-sm">{t.schedule.description}</p>
-              </div>
+        {/* Class Schedule Section */}
+        <section id="jadwal" className="py-24 max-w-7xl mx-auto px-4 sm:px-6 md:px-8 w-full box-border overflow-hidden">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <span className="text-blue-600 font-bold uppercase tracking-wider text-xs bg-blue-50 px-4 py-1.5 rounded-full inline-block mb-3">
+              {lang === 'id' ? 'Jadwal Pembelajaran' : 'Academic Timetable'}
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-blue-950 mb-3">{t.schedule.title}</h2>
+            <p className="text-slate-500 text-sm md:text-base leading-relaxed">{t.schedule.description}</p>
+            <div className="w-16 h-1 bg-blue-600 mx-auto rounded-full mt-4" />
+          </div>
+
+          {/* Grade Selector */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-8 w-full min-w-0">
+            {(Array.from(new Set(scheduleData.map(s => s.grade))).sort().length > 0 
+              ? Array.from(new Set(scheduleData.map(s => s.grade))).sort() 
+              : ['Kelas 1', 'Kelas 2', 'Kelas 3', 'Kelas 4', 'Kelas 5', 'Kelas 6']
+            ).map((grade) => (
+              <button
+                key={grade}
+                onClick={() => setSelectedGrade(grade)}
+                className={`px-5 py-2.5 rounded-2xl text-xs md:text-sm font-bold transition-all ${
+                  selectedGrade === grade 
+                  ? 'bg-blue-800 text-white shadow-lg shadow-blue-900/20 scale-105' 
+                  : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-xs'
+                }`}
+              >
+                {grade}
+              </button>
+            ))}
+          </div>
+
+          {/* Day Filter Pills (Semua Hari as default, or quick focus on specific day) */}
+          <div className="flex items-center justify-start sm:justify-center gap-2 mb-10 overflow-x-auto pb-2 scrollbar-none w-full min-w-0">
+            {['ALL', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'].map((day) => {
+              const label = day === 'ALL' 
+                ? (lang === 'id' ? '🌟 Semua Hari' : '🌟 All Days') 
+                : (lang === 'id' ? day : {
+                    'Senin': 'Monday',
+                    'Selasa': 'Tuesday',
+                    'Rabu': 'Wednesday',
+                    'Kamis': 'Thursday',
+                    'Jumat': 'Friday',
+                    'Sabtu': 'Saturday'
+                  }[day] || day);
               
-              <div className="flex gap-2 mb-8 overflow-x-auto pb-2 scrollbar-none">
-                {['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'].map((day) => (
-                  <button
+              const isSelected = activeTab === day;
+
+              return (
+                <button
+                  key={day}
+                  onClick={() => setActiveTab(day)}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
+                    isSelected 
+                      ? 'bg-blue-600 text-white shadow-md' 
+                      : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                  }`}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* All Days Timetable Grid for the selected class */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full min-w-0">
+            {['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
+              .filter(d => activeTab === 'ALL' || activeTab === d)
+              .map((day) => {
+                const daySchedule = scheduleData.find(s => s.day?.toLowerCase() === day.toLowerCase() && s.grade === selectedGrade);
+                const subjects = daySchedule?.subjects || [];
+                const dayName = lang === 'id' ? day : {
+                  'Senin': 'Monday',
+                  'Selasa': 'Tuesday',
+                  'Rabu': 'Wednesday',
+                  'Kamis': 'Thursday',
+                  'Jumat': 'Friday',
+                  'Sabtu': 'Saturday'
+                }[day] || day;
+
+                return (
+                  <motion.div 
                     key={day}
-                    onClick={() => setActiveTab(day)}
-                    className={`px-6 py-2.5 rounded-full font-bold transition-all text-sm shrink-0 ${
-                      activeTab === day 
-                      ? 'bg-blue-700 text-white shadow-lg' 
-                      : 'bg-white text-slate-600 hover:bg-slate-200'
-                    }`}
-                  >
-                    {lang === 'id' ? day : {
-                      'Senin': 'Monday',
-                      'Selasa': 'Tuesday',
-                      'Rabu': 'Wednesday',
-                      'Kamis': 'Thursday',
-                      'Jumat': 'Friday',
-                      'Sabtu': 'Saturday'
-                    }[day]}
-                  </button>
-                ))}
-              </div>
-              
-              <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden min-h-[300px]">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={`${selectedGrade}-${activeTab}`}
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="p-4"
+                    transition={{ duration: 0.3 }}
+                    className="bg-white rounded-[2rem] p-6 shadow-sm hover:shadow-xl transition-all border border-slate-100 flex flex-col justify-between w-full min-w-0 box-border"
                   >
-                    {scheduleData.find(s => s.day === activeTab && s.grade === selectedGrade)?.subjects.map((sub, i) => (
-                      <div 
-                        key={i} 
-                        className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 gap-4 ${i !== 0 ? 'border-t border-slate-50' : ''}`}
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 bg-slate-100 rounded-full flex-shrink-0 flex items-center justify-center text-blue-700">
-                            <Clock size={18} />
+                    <div>
+                      {/* Day Header */}
+                      <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-10 h-10 bg-blue-50 text-blue-700 rounded-2xl flex items-center justify-center shrink-0">
+                            <Calendar size={18} />
                           </div>
-                          <div>
-                            <h4 className="font-bold text-slate-800 break-words">{sub.name}</h4>
-                            <p className="text-xs text-slate-400 font-medium">{t.schedule.hour}</p>
+                          <div className="min-w-0">
+                            <h3 className="font-bold text-lg text-blue-950 truncate">{dayName}</h3>
+                            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{selectedGrade}</span>
                           </div>
                         </div>
-                        <span className="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-lg self-start sm:self-center shrink-0">
-                          {sub.time}
+                        <span className={`text-[10px] font-bold px-3 py-1 rounded-full shrink-0 ${subjects.length > 0 ? 'bg-blue-50 text-blue-700' : 'bg-slate-100 text-slate-400'}`}>
+                          {subjects.length > 0 ? `${subjects.length} ${lang === 'id' ? 'Mapel' : 'Subjects'}` : (lang === 'id' ? 'Libur' : 'No Class')}
                         </span>
                       </div>
-                    )) || (
-                      <div className="py-20 text-center text-slate-400 italic font-medium">
-                        {t.schedule.empty.replace('{grade}', selectedGrade).replace('{day}', lang === 'id' ? activeTab : {
-                          'Senin': 'Monday',
-                          'Selasa': 'Tuesday',
-                          'Rabu': 'Wednesday',
-                          'Kamis': 'Thursday',
-                          'Jumat': 'Friday',
-                          'Sabtu': 'Saturday'
-                        }[activeTab] || activeTab)}
+
+                      {/* Subjects List */}
+                      <div className="space-y-2.5">
+                        {subjects.length > 0 ? (
+                          subjects.map((sub, idx) => (
+                            <div 
+                              key={idx}
+                              className="bg-slate-50/80 hover:bg-blue-50/40 p-3 rounded-2xl transition-colors flex items-center justify-between gap-3 border border-slate-100"
+                            >
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <div className="w-6 h-6 rounded-lg bg-white text-blue-600 flex items-center justify-center shrink-0 border border-slate-100">
+                                  <BookOpen size={12} />
+                                </div>
+                                <h4 className="font-bold text-xs md:text-sm text-slate-800 break-words" title={sub.name}>
+                                  {sub.name}
+                                </h4>
+                              </div>
+                              <span className="shrink-0 font-mono text-[10px] font-bold text-blue-700 bg-white px-2 py-0.5 rounded-lg border border-blue-100/70">
+                                {sub.time}
+                              </span>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="py-8 text-center text-slate-400 text-xs italic flex flex-col items-center justify-center gap-2">
+                            <Clock size={20} className="text-slate-300" />
+                            <span>{lang === 'id' ? 'Tidak ada jadwal pelajaran' : 'No classes scheduled'}</span>
+                          </div>
+                        )}
                       </div>
-                    )}
+                    </div>
                   </motion.div>
-                </AnimatePresence>
-              </div>
+                );
+              })}
+          </div>
+        </section>
+
+        {/* Extracurricular Section */}
+        <section id="ekstrakurikuler" className="py-24 bg-gradient-to-b from-slate-100/60 to-slate-50/30 border-t border-slate-200/60 w-full box-border overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 w-full box-border">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <span className="text-blue-600 font-bold uppercase tracking-wider text-xs bg-blue-50 px-4 py-1.5 rounded-full inline-block mb-3">
+                {lang === 'id' ? 'Minat & Bakat Siswa' : 'Talents & Hobbies'}
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-blue-950 mb-3">{t.extra.title}</h2>
+              <p className="text-slate-500 text-sm md:text-base leading-relaxed">{t.extra.description}</p>
+              <div className="w-16 h-1 bg-blue-600 mx-auto rounded-full mt-4" />
             </div>
 
-            {/* Extracurricular */}
-            <div>
-              <div className="mb-10">
-                <h2 className="text-3xl font-bold text-blue-950 mb-4">{t.extra.title}</h2>
-                <p className="text-slate-500">{t.extra.description}</p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {extraData.length > 0 ? extraData.map((extra, i) => (
-                  <motion.div
-                    key={extra.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    onClick={() => setSelectedExtra(extra)}
-                    className="bg-white p-6 rounded-3xl shadow-lg border border-slate-50 hover:bg-blue-700 hover:text-white transition-all group cursor-pointer w-full box-border"
-                  >
-                    <div className="w-12 h-12 bg-blue-50 group-hover:bg-blue-600 rounded-2xl flex items-center justify-center text-blue-700 group-hover:text-white mb-4 transition-colors">
-                      {extra.icon === 'Tent' && <Tent size={24} />}
-                      {extra.icon === 'Music' && <Music size={24} />}
-                      {extra.icon === 'Cpu' && <Cpu size={24} />}
-                      {extra.icon === 'Trophy' && <Trophy size={24} />}
-                      {extra.icon === 'Palette' && <Palette size={24} />}
-                      {extra.icon === 'Target' && <Target size={24} />}
-                      {extra.icon === 'BookOpen' && <BookOpen size={24} />}
-                      {extra.icon === 'Mic2' && <Mic2 size={24} />}
-                      {extra.icon === 'Heart' && <Heart size={24} />}
-                      {extra.icon === 'Camera' && <Camera size={24} />}
-                      {extra.icon === 'Monitor' && <Monitor size={24} />}
-                      {extra.icon === 'Users' && <Users size={24} />}
-                      {extra.icon === 'Globe' && <Globe size={24} />}
-                      {extra.icon === 'Star' && <Star size={24} />}
-                      {!extra.icon && <Star size={24} />}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full min-w-0">
+              {extraData.length > 0 ? extraData.map((extra, i) => (
+                <motion.div
+                  key={extra.id}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                  onClick={() => setSelectedExtra(extra)}
+                  className="bg-white p-7 rounded-[2rem] shadow-sm hover:shadow-xl border border-slate-100 hover:border-blue-200 transition-all group cursor-pointer w-full min-w-0 flex flex-col justify-between box-border"
+                >
+                  <div>
+                    <div className="w-14 h-14 bg-blue-50 group-hover:bg-blue-600 rounded-2xl flex items-center justify-center text-blue-700 group-hover:text-white mb-6 transition-all duration-300 shadow-sm">
+                      {extra.icon === 'Tent' && <Tent size={28} />}
+                      {extra.icon === 'Music' && <Music size={28} />}
+                      {extra.icon === 'Cpu' && <Cpu size={28} />}
+                      {extra.icon === 'Trophy' && <Trophy size={28} />}
+                      {extra.icon === 'Palette' && <Palette size={28} />}
+                      {extra.icon === 'Target' && <Target size={28} />}
+                      {extra.icon === 'BookOpen' && <BookOpen size={28} />}
+                      {extra.icon === 'Mic2' && <Mic2 size={28} />}
+                      {extra.icon === 'Heart' && <Heart size={28} />}
+                      {extra.icon === 'Camera' && <Camera size={28} />}
+                      {extra.icon === 'Monitor' && <Monitor size={28} />}
+                      {extra.icon === 'Users' && <Users size={28} />}
+                      {extra.icon === 'Globe' && <Globe size={28} />}
+                      {(!extra.icon || extra.icon === 'Star') && <Star size={28} />}
                     </div>
-                    <h3 className="font-bold mb-2">{extra.name}</h3>
-                    <p className="text-slate-500 group-hover:text-blue-100 text-sm leading-relaxed">
+
+                    <h3 className="font-bold text-xl text-blue-950 mb-2 group-hover:text-blue-700 transition-colors">
+                      {extra.name}
+                    </h3>
+                    <p className="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-3">
                       {extra.description}
                     </p>
-                  </motion.div>
-                )) : (
-                  <p className="col-span-2 text-center text-slate-400 py-6 italic">{t.extra.empty}</p>
-                )}
-              </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-1.5 text-slate-500 font-medium">
+                      <Clock size={14} className="text-blue-600" />
+                      <span className="truncate max-w-[150px]">{extra.schedule || (lang === 'id' ? 'Jadwal Rutin' : 'Weekly')}</span>
+                    </div>
+                    <span className="font-bold text-blue-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                      {lang === 'id' ? 'Detail' : 'Details'} <ChevronRight size={14} />
+                    </span>
+                  </div>
+                </motion.div>
+              )) : (
+                <div className="col-span-full text-center py-12 text-slate-400 italic">
+                  {t.extra.empty}
+                </div>
+              )}
             </div>
           </div>
         </section>

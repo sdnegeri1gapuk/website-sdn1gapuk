@@ -1114,9 +1114,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                             placeholder="07:00-08:00|Matematika" 
                             value={editingItem?.subjects?.map((s:any) => `${s.time}|${s.name}`).join('\n') || ''} 
                             onChange={e => {
-                              const lines = e.target.value.split('\n');
+                              const lines = (e.target.value || '').split('\n');
                               const subs = lines.map(l => {
-                                const [time, name] = l.split('|');
+                                const [time, name] = (l || '').split('|');
                                 return { time: (time || '').trim(), name: (name || '').trim() };
                               }).filter(x => x.name);
                               setEditingItem({...editingItem, subjects: subs});
