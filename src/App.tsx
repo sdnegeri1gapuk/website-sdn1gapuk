@@ -15,6 +15,14 @@ import {
 } from 'lucide-react';
 import { syncData } from './lib/dataService';
 import { translations } from './lib/translations';
+import { 
+  useTranslatedProfile, 
+  useTranslatedNews, 
+  useTranslatedExtras, 
+  useTranslatedStaff, 
+  useTranslatedAchievements, 
+  useTranslatedSchedule 
+} from './lib/translationService';
 import { NewsItem, GalleryItem, ScheduleItem, ExtraItem, StaffItem, AchievementItem } from './types';
 import { Login } from './components/Login';
 import { AdminDashboard } from './components/AdminDashboard';
@@ -106,6 +114,14 @@ export default function App() {
     heroImage: 'https://images.unsplash.com/photo-1544717297-fa95b3ee51f3?auto=format&fit=crop&q=80',
     profileImage: 'https://images.unsplash.com/photo-1523050335392-93851179ae22?auto=format&fit=crop&q=80'
   });
+
+  // Dynamic Content Translations for EN/ID
+  const displayProfile = useTranslatedProfile(profile, lang);
+  const displayNews = useTranslatedNews(newsData, lang);
+  const displayExtras = useTranslatedExtras(extraData, lang);
+  const displayStaff = useTranslatedStaff(staffData, lang);
+  const displayAchievements = useTranslatedAchievements(achievementsData, lang);
+  const displaySchedule = useTranslatedSchedule(scheduleData, lang);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -319,7 +335,7 @@ export default function App() {
         <section id="beranda" className="relative h-[105vh] flex items-center overflow-hidden pt-12 pb-40">
           <div className="absolute inset-0 z-0">
             <img 
-              src={profile?.heroImage || 'https://images.unsplash.com/photo-1544717297-fa95b3ee51f3?auto=format&fit=crop&q=80'} 
+              src={displayProfile?.heroImage || 'https://images.unsplash.com/photo-1544717297-fa95b3ee51f3?auto=format&fit=crop&q=80'} 
               className="w-full h-full object-cover brightness-[0.4]"
               alt="SDN 1 Gapuk"
               referrerPolicy="no-referrer"
@@ -400,7 +416,7 @@ export default function App() {
               className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl"
             >
               <img 
-                src={profile?.profileImage || 'https://images.unsplash.com/photo-1523050335392-93851179ae22?auto=format&fit=crop&q=80'} 
+                src={displayProfile?.profileImage || 'https://images.unsplash.com/photo-1523050335392-93851179ae22?auto=format&fit=crop&q=80'} 
                 className="w-full h-full object-cover" 
                 alt="Vision"
                 referrerPolicy="no-referrer"
@@ -416,7 +432,7 @@ export default function App() {
                   {t.profile.visionTitle}
                 </h3>
                 <p className="text-slate-600 leading-relaxed italic">
-                  "{profile?.vision || ''}"
+                  "{displayProfile?.vision || ''}"
                 </p>
               </div>
 
@@ -428,7 +444,7 @@ export default function App() {
                   {t.profile.missionTitle}
                 </h3>
                 <ul className="space-y-3 text-slate-600">
-                  {(profile?.mission || '').split('\n').filter(Boolean).map((point, i) => (
+                  {(displayProfile?.mission || '').split('\n').filter(Boolean).map((point, i) => (
                     <li key={i} className="flex gap-3">
                       <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
                       {point}
@@ -445,20 +461,24 @@ export default function App() {
           <div className="max-w-7xl mx-auto px-4 md:px-8">
             <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
               <div className="max-w-xl">
-                <span className="text-blue-600 font-black uppercase tracking-[0.2em] text-xs mb-4 block">Prestasi Terkini</span>
+                <span className="text-blue-600 font-black uppercase tracking-[0.2em] text-xs mb-4 block">
+                  {lang === 'id' ? 'Prestasi Terkini' : 'Recent Achievements'}
+                </span>
                 <h2 className="text-4xl md:text-5xl font-bold text-blue-950 leading-tight">
-                  Kebanggaan <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Terbaik Kami</span>
+                  {lang === 'id' ? 'Kebanggaan' : 'Our Proud'} <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{lang === 'id' ? 'Terbaik Kami' : 'Excellence'}</span>
                 </h2>
                 <div className="w-24 h-1.5 bg-blue-600 mt-6 rounded-full" />
               </div>
               <p className="text-slate-500 max-w-md text-sm leading-relaxed">
-                Apresiasi untuk dedikasi dan kerja keras siswa serta tenaga pendidik SDN 1 Gapuk dalam berbagai ajang kompetisi.
+                {lang === 'id' 
+                  ? 'Apresiasi untuk dedikasi dan kerja keras siswa serta tenaga pendidik SDN 1 Gapuk dalam berbagai ajang kompetisi.'
+                  : 'Appreciation for the dedication and hard work of students and educators of SDN 1 Gapuk across various competitions.'}
               </p>
             </div>
 
-            {achievementsData.length > 0 ? (
+            {displayAchievements.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {achievementsData.map((item, i) => (
+                {displayAchievements.map((item, i) => (
                   <motion.div
                     key={item.id}
                     initial={{ opacity: 0, y: 30 }}
@@ -486,7 +506,7 @@ export default function App() {
                           ? 'bg-purple-600/90 text-white' 
                           : 'bg-orange-600/90 text-white'
                         }`}>
-                          {item.type}
+                          {lang === 'id' ? item.type : (item.type === 'Guru' ? 'Teacher' : 'Student')}
                         </span>
                         {item.category && (
                           <span className="bg-white/90 backdrop-blur-md text-slate-800 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-lg">
@@ -514,8 +534,8 @@ export default function App() {
             ) : (
               <div className="py-20 text-center bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200">
                 <Trophy size={60} className="mx-auto text-slate-200 mb-6" />
-                <h4 className="text-slate-800 font-bold mb-2">Prestasi Belum Tersedia</h4>
-                <p className="text-slate-500 text-sm italic">Belum ada data prestasi yang ditambahkan oleh admin.</p>
+                <h4 className="text-slate-800 font-bold mb-2">{lang === 'id' ? 'Prestasi Belum Tersedia' : 'Achievements Not Available'}</h4>
+                <p className="text-slate-500 text-sm italic">{lang === 'id' ? 'Belum ada data prestasi yang ditambahkan oleh admin.' : 'No achievement data has been added yet.'}</p>
               </div>
             )}
           </div>
@@ -531,7 +551,7 @@ export default function App() {
 
           <div className="relative group">
             {/* Navigation Arrows */}
-            {staffData.length > 0 && (
+            {displayStaff.length > 0 && (
               <>
                 <button 
                   onClick={() => scrollStaff('left')}
@@ -553,7 +573,7 @@ export default function App() {
               className="flex gap-6 overflow-x-auto pb-4 scrollbar-none snap-x snap-mandatory scroll-smooth"
               style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
             >
-              {staffData.length > 0 ? staffData.map((person, i) => (
+              {displayStaff.length > 0 ? displayStaff.map((person, i) => (
                 <motion.div
                   key={person.id}
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -607,7 +627,7 @@ export default function App() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
-              {newsData.length > 0 ? newsData.map((news, i) => (
+              {displayNews.length > 0 ? displayNews.map((news, i) => (
                 <motion.button 
                   key={news.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -666,8 +686,8 @@ export default function App() {
 
           {/* Grade Selector */}
           <div className="flex flex-wrap items-center justify-center gap-2 mb-8 w-full min-w-0">
-            {(Array.from(new Set(scheduleData.map(s => s.grade))).sort().length > 0 
-              ? Array.from(new Set(scheduleData.map(s => s.grade))).sort() 
+            {(Array.from(new Set(displaySchedule.map(s => s.grade))).sort().length > 0 
+              ? Array.from(new Set(displaySchedule.map(s => s.grade))).sort() 
               : ['Kelas 1', 'Kelas 2', 'Kelas 3', 'Kelas 4', 'Kelas 5', 'Kelas 6']
             ).map((grade) => (
               <button
@@ -721,7 +741,22 @@ export default function App() {
             {['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
               .filter(d => activeTab === 'ALL' || activeTab === d)
               .map((day) => {
-                const daySchedule = scheduleData.find(s => s.day?.toLowerCase() === day.toLowerCase() && s.grade === selectedGrade);
+                const daySchedule = displaySchedule.find(s => 
+                  (s.day?.toLowerCase() === day.toLowerCase() || 
+                   (day === 'Senin' && s.day?.toLowerCase() === 'monday') ||
+                   (day === 'Selasa' && s.day?.toLowerCase() === 'tuesday') ||
+                   (day === 'Rabu' && s.day?.toLowerCase() === 'wednesday') ||
+                   (day === 'Kamis' && s.day?.toLowerCase() === 'thursday') ||
+                   (day === 'Jumat' && s.day?.toLowerCase() === 'friday') ||
+                   (day === 'Sabtu' && s.day?.toLowerCase() === 'saturday')) && 
+                  (s.grade === selectedGrade || 
+                   (selectedGrade === 'Grade 1' && s.grade === 'Kelas 1') ||
+                   (selectedGrade === 'Grade 2' && s.grade === 'Kelas 2') ||
+                   (selectedGrade === 'Grade 3' && s.grade === 'Kelas 3') ||
+                   (selectedGrade === 'Grade 4' && s.grade === 'Kelas 4') ||
+                   (selectedGrade === 'Grade 5' && s.grade === 'Kelas 5') ||
+                   (selectedGrade === 'Grade 6' && s.grade === 'Kelas 6'))
+                );
                 const subjects = daySchedule?.subjects || [];
                 const dayName = lang === 'id' ? day : {
                   'Senin': 'Monday',
@@ -805,7 +840,7 @@ export default function App() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full min-w-0">
-              {extraData.length > 0 ? extraData.map((extra, i) => (
+              {displayExtras.length > 0 ? displayExtras.map((extra, i) => (
                 <motion.div
                   key={extra.id}
                   initial={{ opacity: 0, y: 15 }}
@@ -1111,12 +1146,12 @@ export default function App() {
       <Modal 
         isOpen={isAllNewsOpen} 
         onClose={() => setIsAllNewsOpen(false)} 
-        title="Daftar Berita & Pengumuman"
+        title={lang === 'id' ? 'Daftar Berita & Pengumuman' : 'News & Announcements'}
       >
         <div className="space-y-2">
-          {newsData.length > 0 ? (
+          {displayNews.length > 0 ? (
             <div className="divide-y divide-slate-100">
-              {newsData.map((news) => (
+              {displayNews.map((news) => (
                 <button 
                   key={news.id}
                   onClick={() => {
@@ -1148,7 +1183,7 @@ export default function App() {
               ))}
             </div>
           ) : (
-            <p className="text-center py-10 text-slate-400 font-medium italic">Belum ada berita yang diterbitkan.</p>
+            <p className="text-center py-10 text-slate-400 font-medium italic">{t.news.empty}</p>
           )}
         </div>
       </Modal>
@@ -1157,95 +1192,115 @@ export default function App() {
       <Modal 
         isOpen={selectedNews !== null} 
         onClose={() => setSelectedNews(null)} 
-        title="Detail Berita & Pengumuman"
+        title={lang === 'id' ? 'Detail Berita & Pengumuman' : 'News & Announcement Detail'}
       >
-        {selectedNews && (
-          <div className="space-y-6">
-            <img 
-              src={selectedNews.imageUrl} 
-              alt={selectedNews.title} 
-              className="w-full h-64 object-cover rounded-3xl shadow-lg"
-              referrerPolicy="no-referrer"
-            />
-            <div className="flex items-center gap-3">
-              <span className="bg-blue-50 text-blue-700 text-xs font-bold uppercase px-3 py-1 rounded-full">
-                {selectedNews.category}
-              </span>
-              <span className="text-slate-400 text-sm flex items-center gap-1">
-                <Calendar size={14} /> {selectedNews.date}
-              </span>
+        {(() => {
+          const activeNews = selectedNews ? (displayNews.find(n => n.id === selectedNews.id) || selectedNews) : null;
+          if (!activeNews) return null;
+          return (
+            <div className="space-y-6">
+              <img 
+                src={activeNews.imageUrl} 
+                alt={activeNews.title} 
+                className="w-full h-64 object-cover rounded-3xl shadow-lg"
+                referrerPolicy="no-referrer"
+              />
+              <div className="flex items-center gap-3">
+                <span className="bg-blue-50 text-blue-700 text-xs font-bold uppercase px-3 py-1 rounded-full">
+                  {activeNews.category}
+                </span>
+                <span className="text-slate-400 text-sm flex items-center gap-1">
+                  <Calendar size={14} /> {activeNews.date}
+                </span>
+              </div>
+              <h2 className="text-3xl font-bold text-blue-950 leading-tight">
+                {activeNews.title}
+              </h2>
+              <div className="prose prose-slate max-w-none">
+                <p className="text-slate-600 leading-relaxed text-lg whitespace-pre-wrap">
+                  {activeNews.content}
+                </p>
+              </div>
+              <div className="pt-6 border-t border-slate-100">
+                <button 
+                  onClick={() => setSelectedNews(null)}
+                  className="bg-blue-700 text-white px-8 py-3 rounded-full font-bold hover:bg-blue-800 transition-colors"
+                >
+                  {lang === 'id' ? 'Tutup Review' : 'Close'}
+                </button>
+              </div>
             </div>
-            <h2 className="text-3xl font-bold text-blue-950 leading-tight">
-              {selectedNews.title}
-            </h2>
-            <div className="prose prose-slate max-w-none">
-              <p className="text-slate-600 leading-relaxed text-lg whitespace-pre-wrap">
-                {selectedNews.content}
-              </p>
-            </div>
-            <div className="pt-6 border-t border-slate-100">
-              <button 
-                onClick={() => setSelectedNews(null)}
-                className="bg-blue-700 text-white px-8 py-3 rounded-full font-bold hover:bg-blue-800 transition-colors"
-              >
-                Tutup Review
-              </button>
-            </div>
-          </div>
-        )}
+          );
+        })()}
       </Modal>
 
       {/* Detail Ekstrakurikuler Modal */}
       <Modal 
         isOpen={selectedExtra !== null} 
         onClose={() => setSelectedExtra(null)} 
-        title="Detail Ekstrakurikuler"
+        title={lang === 'id' ? 'Detail Ekstrakurikuler' : 'Extracurricular Detail'}
       >
-        {selectedExtra && (
-          <div className="space-y-8">
-            <div className="flex items-center gap-6">
-              <div className="w-20 h-20 bg-blue-50 rounded-[2rem] flex items-center justify-center text-blue-700">
-                {selectedExtra.icon === 'Tent' && <Tent size={40} />}
-                {selectedExtra.icon === 'Music' && <Music size={40} />}
-                {selectedExtra.icon === 'Cpu' && <Cpu size={40} />}
-                {selectedExtra.icon === 'Trophy' && <Trophy size={40} />}
+        {(() => {
+          const activeExtra = selectedExtra ? (displayExtras.find(e => e.id === selectedExtra.id) || selectedExtra) : null;
+          if (!activeExtra) return null;
+          return (
+            <div className="space-y-8">
+              <div className="flex items-center gap-6">
+                <div className="w-20 h-20 bg-blue-50 rounded-[2rem] flex items-center justify-center text-blue-700">
+                  {activeExtra.icon === 'Tent' && <Tent size={40} />}
+                  {activeExtra.icon === 'Music' && <Music size={40} />}
+                  {activeExtra.icon === 'Cpu' && <Cpu size={40} />}
+                  {activeExtra.icon === 'Trophy' && <Trophy size={40} />}
+                  {activeExtra.icon === 'Palette' && <Palette size={40} />}
+                  {activeExtra.icon === 'Target' && <Target size={40} />}
+                  {activeExtra.icon === 'BookOpen' && <BookOpen size={40} />}
+                  {activeExtra.icon === 'Mic2' && <Mic2 size={40} />}
+                  {activeExtra.icon === 'Heart' && <Heart size={40} />}
+                  {activeExtra.icon === 'Camera' && <Camera size={40} />}
+                  {activeExtra.icon === 'Monitor' && <Monitor size={40} />}
+                  {activeExtra.icon === 'Users' && <Users size={40} />}
+                  {activeExtra.icon === 'Globe' && <Globe size={40} />}
+                  {(!activeExtra.icon || activeExtra.icon === 'Star') && <Star size={40} />}
+                </div>
+                <div>
+                  <h2 className="text-3xl font-bold text-blue-950">{activeExtra.name}</h2>
+                  <p className="text-blue-600 font-semibold">{activeExtra.coach}</p>
+                </div>
               </div>
-              <div>
-                <h2 className="text-3xl font-bold text-blue-950">{selectedExtra.name}</h2>
-                <p className="text-blue-600 font-semibold">{selectedExtra.coach}</p>
+              
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="bg-slate-50 p-6 rounded-3xl">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                    <Clock size={14} /> {lang === 'id' ? 'Jadwal Latihan' : 'Practice Schedule'}
+                  </h4>
+                  <p className="font-bold text-slate-800">{activeExtra.schedule}</p>
+                </div>
+                <div className="bg-slate-50 p-6 rounded-3xl">
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                    <Users size={14} /> {lang === 'id' ? 'Status' : 'Status'}
+                  </h4>
+                  <p className="font-bold text-slate-800 text-green-600">
+                    {lang === 'id' ? 'Terbuka untuk Anggota Baru' : 'Open for New Members'}
+                  </p>
+                </div>
               </div>
-            </div>
-            
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div className="bg-slate-50 p-6 rounded-3xl">
-                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
-                  <Clock size={14} /> Jadwal Latihan
-                </h4>
-                <p className="font-bold text-slate-800">{selectedExtra.schedule}</p>
-              </div>
-              <div className="bg-slate-50 p-6 rounded-3xl">
-                <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
-                  <Users size={14} /> Status
-                </h4>
-                <p className="font-bold text-slate-800 text-green-600">Terbuka untuk Anggota Baru</p>
-              </div>
-            </div>
 
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-blue-950">Tentang Kegiatan</h3>
-              <p className="text-slate-600 leading-relaxed text-lg">
-                {selectedExtra.longDescription}
-              </p>
-            </div>
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-blue-950">{lang === 'id' ? 'Tentang Kegiatan' : 'About the Activity'}</h3>
+                <p className="text-slate-600 leading-relaxed text-lg">
+                  {activeExtra.longDescription}
+                </p>
+              </div>
 
-            <button 
-              onClick={() => setSelectedExtra(null)}
-              className="w-full bg-blue-700 text-white py-4 rounded-3xl font-bold hover:bg-blue-800 transition-colors"
-            >
-              Kembali ke Menu
-            </button>
-          </div>
-        )}
+              <button 
+                onClick={() => setSelectedExtra(null)}
+                className="w-full bg-blue-700 text-white py-4 rounded-3xl font-bold hover:bg-blue-800 transition-colors"
+              >
+                {lang === 'id' ? 'Kembali ke Menu' : 'Back to Menu'}
+              </button>
+            </div>
+          );
+        })()}
       </Modal>
 
       {/* Registration Form Modal */}
