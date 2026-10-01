@@ -179,8 +179,12 @@ export default function App() {
     const unsubExtras = syncData.subscribeExtra(setExtraData);
     const unsubStaff = syncData.subscribeStaff(setStaffData);
     const unsubAchievements = syncData.subscribeAchievements(setAchievementsData);
-    const unsubStats = syncData.subscribeStats((val) => val && setStats(val));
-    const unsubProfile = syncData.subscribeProfile((val) => val && setProfile(val));
+    const unsubStats = syncData.subscribeStats((val) => {
+      if (val) setStats(prev => ({ ...prev, ...val }));
+    });
+    const unsubProfile = syncData.subscribeProfile((val) => {
+      if (val) setProfile(prev => ({ ...prev, ...val }));
+    });
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -313,7 +317,7 @@ export default function App() {
         <section id="beranda" className="relative h-[105vh] flex items-center overflow-hidden pt-12 pb-40">
           <div className="absolute inset-0 z-0">
             <img 
-              src={profile.heroImage} 
+              src={profile?.heroImage || 'https://images.unsplash.com/photo-1544717297-fa95b3ee51f3?auto=format&fit=crop&q=80'} 
               className="w-full h-full object-cover brightness-[0.4]"
               alt="SDN 1 Gapuk"
               referrerPolicy="no-referrer"
@@ -394,7 +398,7 @@ export default function App() {
               className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl"
             >
               <img 
-                src={profile.profileImage} 
+                src={profile?.profileImage || 'https://images.unsplash.com/photo-1523050335392-93851179ae22?auto=format&fit=crop&q=80'} 
                 className="w-full h-full object-cover" 
                 alt="Vision"
                 referrerPolicy="no-referrer"
@@ -410,7 +414,7 @@ export default function App() {
                   {t.profile.visionTitle}
                 </h3>
                 <p className="text-slate-600 leading-relaxed italic">
-                  "{profile.vision}"
+                  "{profile?.vision || ''}"
                 </p>
               </div>
 
@@ -422,7 +426,7 @@ export default function App() {
                   {t.profile.missionTitle}
                 </h3>
                 <ul className="space-y-3 text-slate-600">
-                  {profile.mission.split('\n').map((point, i) => (
+                  {(profile?.mission || '').split('\n').filter(Boolean).map((point, i) => (
                     <li key={i} className="flex gap-3">
                       <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
                       {point}

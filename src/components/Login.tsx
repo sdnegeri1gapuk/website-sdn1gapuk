@@ -10,11 +10,11 @@ interface LoginProps {
 
 export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<{ message: string; isDomainError?: boolean } | null>(null);
 
   const handleGoogleLogin = async () => {
     setLoading(true);
-    setError('');
+    setError(null);
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const userEmail = result.user.email?.toLowerCase();
@@ -29,12 +29,18 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
       if (isMasterAdmin || isAdditionalAdmin) {
         onLogin(true);
       } else {
-        setError(`Akses Ditolak. Email ${result.user.email} tidak terdaftar sebagai Admin.`);
+        setError({
+          message: `Akses Ditolak. Email ${result.user.email} tidak terdaftar sebagai Admin.`
+        });
         await auth.signOut();
       }
     } catch (err: any) {
       console.error(err);
-      setError('Gagal masuk: ' + (err.message || 'Error tidak diketahui'));
+      const isDomainError = err?.code === 'auth/unauthorized-domain' || err?.message?.includes('unauthorized-domain');
+      setError({
+        message: err.message || 'Error tidak diketahui',
+        isDomainError
+      });
     } finally {
       setLoading(false);
     }
@@ -66,9 +72,29 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </div>
 
           {error && (
-            <div className="bg-red-50 text-red-500 p-4 rounded-xl text-sm font-medium border border-red-100 text-center">
-              {error}
-            </div>
+            error.isDomainError ? (
+              <div className="bg-amber-50 text-amber-900 p-5 rounded-2xl text-left border border-amber-200 text-xs space-y-2">
+                <p className="font-bold text-amber-800 text-sm flex items-center gap-1.5">
+                  ⚠️ Domain Belum Diizinkan di Firebase
+                </p>
+                <p className="text-amber-700 leading-relaxed">
+                  Firebase menolak login karena domain <strong>{window.location.hostname}</strong> belum didaftarkan di daftar <em>Authorized Domains</em>.
+                </p>
+                <div className="bg-white/80 p-3 rounded-xl border border-amber-200 space-y-1.5">
+                  <p className="font-semibold text-amber-900">Cara Mengizinkan (1 Menit):</p>
+                  <ol className="list-decimal list-inside space-y-1 text-slate-700">
+                    <li>Buka <a href="https://console.firebase.google.com/project/gen-lang-client-0591674698/authentication/settings" target="_blank" rel="noreferrer" className="text-blue-600 underline font-semibold">Firebase Console Settings</a></li>
+                    <li>Pilih tab <strong>Authorized domains</strong></li>
+                    <li>Klik <strong>Add domain</strong> lalu masukkan: <code className="bg-amber-100 text-amber-900 px-1.5 py-0.5 rounded font-mono font-bold">{window.location.hostname}</code></li>
+                    <li>Klik <strong>Save</strong> dan coba masuk kembali.</li>
+                  </ol>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-red-50 text-red-500 p-4 rounded-xl text-sm font-medium border border-red-100 text-center">
+                {error.message}
+              </div>
+            )
           )}
 
           <button 

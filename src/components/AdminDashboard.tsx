@@ -46,7 +46,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
 
   const parseBulkSchedule = (text: string, grade: string) => {
     const days = ['SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU', 'MINGGU'];
-    const lines = text.split('\n');
+    const lines = (text || '').split('\n');
     const results: any[] = [];
     let currentDay = '';
     let currentSubjects: any[] = [];
@@ -508,7 +508,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                       </button>
                     </div>
                     <ul className="space-y-3">
-                      {profile.mission?.split('\n').map((line: string, i: number) => (
+                      {(profile?.mission || '').split('\n').filter(Boolean).map((line: string, i: number) => (
                         <li key={i} className="flex gap-3 text-slate-600">
                           <div className="mt-2 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
                           {line}
