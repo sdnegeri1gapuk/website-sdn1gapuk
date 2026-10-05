@@ -4,7 +4,7 @@ import {
   Newspaper, Bell, Calendar as CalendarIcon, 
   MapPin, Clock, ChevronRight, FileText, Download
 } from 'lucide-react';
-import { NewsItem, AgendaItem } from '../types';
+import { NewsItem, AgendaItem, AcademicCalendarInfo } from '../types';
 import { AGENDA_DATA, ACADEMIC_CALENDAR } from '../data/schoolStructure';
 
 interface InformasiSectionProps {
@@ -12,14 +12,21 @@ interface InformasiSectionProps {
   newsList: NewsItem[];
   onSelectNews: (news: NewsItem) => void;
   onViewAllNews: () => void;
+  agendaList?: AgendaItem[];
+  calendarData?: AcademicCalendarInfo;
 }
 
 export const InformasiSection: React.FC<InformasiSectionProps> = ({
   lang,
   newsList,
   onSelectNews,
-  onViewAllNews
+  onViewAllNews,
+  agendaList,
+  calendarData
 }) => {
+  const activeAgenda = agendaList && agendaList.length > 0 ? agendaList : AGENDA_DATA;
+  const activeCalendar = calendarData || ACADEMIC_CALENDAR;
+
   const [activeTab, setActiveTab] = useState<'berita' | 'pengumuman' | 'agenda' | 'kalender'>('berita');
 
   useEffect(() => {
@@ -201,7 +208,7 @@ export const InformasiSection: React.FC<InformasiSectionProps> = ({
         {/* TAB 3: Agenda Kegiatan */}
         {activeTab === 'agenda' && (
           <div id="agenda" className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            {AGENDA_DATA.map((ag) => (
+            {activeAgenda.map((ag) => (
               <div
                 key={ag.id}
                 className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
@@ -249,13 +256,13 @@ export const InformasiSection: React.FC<InformasiSectionProps> = ({
                   <CalendarIcon size={20} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-blue-950">Semester Ganjil 2026</h3>
-                  <p className="text-xs text-slate-400">{ACADEMIC_CALENDAR.semesterGanjil.period}</p>
+                  <h3 className="font-bold text-lg text-blue-950">Semester Ganjil</h3>
+                  <p className="text-xs text-slate-400">{activeCalendar.semesterGanjil?.period || 'Juli - Desember'}</p>
                 </div>
               </div>
 
               <div className="space-y-3.5">
-                {ACADEMIC_CALENDAR.semesterGanjil.events.map((ev, i) => (
+                {(activeCalendar.semesterGanjil?.events || []).map((ev, i) => (
                   <div key={i} className="flex items-start gap-3 text-xs">
                     <span className="font-mono font-bold text-blue-700 shrink-0 w-32 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">
                       {ev.date}
@@ -273,13 +280,13 @@ export const InformasiSection: React.FC<InformasiSectionProps> = ({
                   <CalendarIcon size={20} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-blue-950">Semester Genap 2027</h3>
-                  <p className="text-xs text-slate-400">{ACADEMIC_CALENDAR.semesterGenap.period}</p>
+                  <h3 className="font-bold text-lg text-blue-950">Semester Genap</h3>
+                  <p className="text-xs text-slate-400">{activeCalendar.semesterGenap?.period || 'Januari - Juni'}</p>
                 </div>
               </div>
 
               <div className="space-y-3.5">
-                {ACADEMIC_CALENDAR.semesterGenap.events.map((ev, i) => (
+                {(activeCalendar.semesterGenap?.events || []).map((ev, i) => (
                   <div key={i} className="flex items-start gap-3 text-xs">
                     <span className="font-mono font-bold text-indigo-700 shrink-0 w-32 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">
                       {ev.date}

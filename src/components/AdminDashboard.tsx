@@ -6,12 +6,21 @@ import {
   Calendar, Star, BarChart3, LogOut,
   ChevronRight, Upload, Trophy, Music,
   Palette, Target, BookOpen, Tent,
-  Mic2, Heart, Camera, Monitor, Globe, Users, GraduationCap, Shield
+  Mic2, Heart, Camera, Monitor, Globe, Users, GraduationCap, Shield,
+  Landmark, Network, Clock, UserCheck, Download, FileText
 } from 'lucide-react';
 import { syncData, collections } from '../lib/dataService';
 import { NewsItem, GalleryItem, ScheduleItem, ExtraItem, StaffItem, AchievementItem, AppConfig } from '../types';
 import { GradeManager } from './GradeManager';
 import { AdminAccountManager } from './AdminAccountManager';
+import { PrincipalManager } from './PrincipalManager';
+import { HistoryManager } from './HistoryManager';
+import { OrgStructureManager } from './OrgStructureManager';
+import { AgendaManager } from './AgendaManager';
+import { CalendarManager } from './CalendarManager';
+import { CurriculumManager } from './CurriculumManager';
+import { PpdbManager } from './PpdbManager';
+import { DownloadManager } from './DownloadManager';
 import { auth } from '../lib/firebase';
 
 import { NEWS_DATA, GALLERY_DATA, SCHEDULE_DATA, EXTRA_DATA } from '../data';
@@ -339,36 +348,101 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
 
       <div className="grid lg:grid-cols-4 gap-8">
         {/* Sidebar Tabs */}
-        <div className="lg:col-span-1 space-y-2">
+        <div className="lg:col-span-1 space-y-5">
           {[
-            { id: 'stats', label: 'Statistik Sekolah', icon: BarChart3, masterOnly: true },
-            { id: 'profile', label: 'Visi & Misi', icon: Target, masterOnly: true },
-            { id: 'media', label: 'Tampilan Utama', icon: ImageIcon, masterOnly: true },
-            { id: 'news', label: 'Berita & Pengumuman', icon: Newspaper, masterOnly: true },
-            { id: 'achievements', label: 'Prestasi Sekolah', icon: Trophy, masterOnly: true },
-            { id: 'gallery', label: 'Galeri Foto', icon: ImageIcon, masterOnly: true },
-            { id: 'staff', label: 'Staf & Guru', icon: Users, masterOnly: true },
-            { id: 'schedules', label: 'Jadwal Pelajaran', icon: Calendar },
-            { id: 'extras', label: 'Ekstrakurikuler', icon: Star, masterOnly: true },
-            { id: 'grades', label: 'Nilai Raport (Kls 6)', icon: GraduationCap },
-            { id: 'admins', label: 'Kelola Admin', icon: Shield, masterOnly: true },
-          ].filter(tab => !tab.masterOnly || isMasterAdmin).map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold transition-all text-left ${
-                activeTab === tab.id 
-                ? 'bg-blue-700 text-white shadow-xl translate-x-2' 
-                : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-100'
-              }`}
-            >
-              <tab.icon size={20} /> {tab.label}
-            </button>
-          ))}
+            {
+              group: 'BERANDA',
+              tabs: [
+                { id: 'stats', label: 'Statistik Sekolah', icon: BarChart3, masterOnly: true },
+                { id: 'media', label: 'Tampilan Utama & Kop', icon: ImageIcon, masterOnly: true },
+              ]
+            },
+            {
+              group: 'PROFIL',
+              tabs: [
+                { id: 'history', label: 'Sejarah Sekolah', icon: Landmark, masterOnly: true },
+                { id: 'profile', label: 'Visi & Misi', icon: Target, masterOnly: true },
+                { id: 'principal', label: 'Kepala Sekolah', icon: UserCheck, masterOnly: true },
+                { id: 'staff', label: 'Guru & Tendik', icon: Users, masterOnly: true },
+                { id: 'orgStructure', label: 'Struktur Organisasi', icon: Network, masterOnly: true },
+              ]
+            },
+            {
+              group: 'INFORMASI',
+              tabs: [
+                { id: 'news', label: 'Berita & Pengumuman', icon: Newspaper, masterOnly: true },
+                { id: 'agenda', label: 'Agenda Sekolah', icon: Calendar, masterOnly: true },
+                { id: 'calendar', label: 'Kalender Pendidikan', icon: Clock, masterOnly: true },
+              ]
+            },
+            {
+              group: 'AKADEMIK',
+              tabs: [
+                { id: 'curriculum', label: 'Kurikulum Merdeka', icon: BookOpen, masterOnly: true },
+                { id: 'schedules', label: 'Jadwal Pelajaran', icon: Calendar },
+                { id: 'extras', label: 'Ekstrakurikuler', icon: Star, masterOnly: true },
+                { id: 'grades', label: 'Nilai Raport (Kls 6)', icon: GraduationCap },
+              ]
+            },
+            {
+              group: 'PRESTASI',
+              tabs: [
+                { id: 'achievements', label: 'Prestasi Sekolah', icon: Trophy, masterOnly: true },
+              ]
+            },
+            {
+              group: 'GALERI',
+              tabs: [
+                { id: 'gallery', label: 'Galeri Foto', icon: ImageIcon, masterOnly: true },
+              ]
+            },
+            {
+              group: 'PPDB',
+              tabs: [
+                { id: 'ppdb', label: 'Pengaturan PPDB', icon: UserCheck, masterOnly: true },
+              ]
+            },
+            {
+              group: 'DOWNLOAD',
+              tabs: [
+                { id: 'downloads', label: 'Pusat Berkas & Download', icon: Download, masterOnly: true },
+              ]
+            },
+            {
+              group: 'PENGATURAN',
+              tabs: [
+                { id: 'admins', label: 'Kelola Admin', icon: Shield, masterOnly: true },
+              ]
+            },
+          ].map((sec) => {
+            const availableTabs = sec.tabs.filter(tab => !tab.masterOnly || isMasterAdmin);
+            if (availableTabs.length === 0) return null;
+
+            return (
+              <div key={sec.group} className="space-y-1.5">
+                <p className="text-[10px] font-black uppercase text-slate-400 tracking-wider px-3">
+                  {sec.group}
+                </p>
+                {availableTabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold transition-all text-left text-xs ${
+                      activeTab === tab.id 
+                      ? 'bg-blue-700 text-white shadow-lg translate-x-1.5' 
+                      : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-100'
+                    }`}
+                  >
+                    <tab.icon size={17} className="shrink-0" /> {tab.label}
+                  </button>
+                ))}
+              </div>
+            );
+          })}
 
           {isMasterAdmin && (
-            <div className="pt-8 mt-8 border-t border-slate-100">
-              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-4 px-4">Maintenance</p>
+            <div className="pt-6 border-t border-slate-100">
+              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-3 px-3">Maintenance</p>
               <button
                 onClick={async () => {
                   if (window.confirm('Hati-hati! Ini akan menimpa data yang ada dengan data awal. Lanjutkan?')) {
@@ -382,21 +456,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                     alert('Data awal berhasil di-seed!');
                   }
                 }}
-                className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold text-slate-500 hover:bg-slate-50 transition-all text-left border border-dashed border-slate-200"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl font-bold text-slate-500 hover:bg-slate-50 transition-all text-left text-xs border border-dashed border-slate-200"
               >
-                <Upload size={20} /> Seed Data Awal
+                <Upload size={16} /> Seed Data Awal
               </button>
             </div>
           )}
         </div>
 
         {/* Content Area */}
-        <div className="lg:col-span-3 bg-white p-8 rounded-[2.5rem] shadow-xl border border-slate-100 min-h-[600px]">
-          <div className="flex justify-between items-center mb-8">
-            <h3 className="text-xl font-bold text-blue-950 capitalize">{activeTab.replace('-', ' ')}</h3>
-            <div className="flex gap-2">
-              {activeTab === 'schedules' && (
-                <>
+        <div className="lg:col-span-3 bg-white p-6 sm:p-8 rounded-[2.5rem] shadow-xl border border-slate-100 min-h-[600px]">
+          {!['principal', 'history', 'orgStructure', 'agenda', 'calendar', 'curriculum', 'ppdb', 'downloads', 'grades', 'admins'].includes(activeTab) && (
+            <div className="flex justify-between items-center mb-8">
+              <h3 className="text-xl font-bold text-blue-950 capitalize">{activeTab.replace('-', ' ')}</h3>
+              <div className="flex gap-2">
+                {activeTab === 'schedules' && (
                   <button 
                     onClick={() => {
                       setEditingItem({ isBulk: true, grade: '', bulkText: '' });
@@ -406,21 +480,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                   >
                     <Upload size={16} /> Input Sekaligus
                   </button>
-                </>
-              )}
-              {activeTab !== 'stats' && (
-                <button 
-                  onClick={() => {
-                    setEditingItem({});
-                    setIsModalOpen(true);
-                  }}
-                  className="bg-blue-700 text-white p-3 rounded-xl shadow-lg hover:bg-blue-800 transition-all active:scale-95"
-                >
-                  <Plus size={24} />
-                </button>
-              )}
+                )}
+                {activeTab !== 'stats' && activeTab !== 'profile' && activeTab !== 'media' && (
+                  <button 
+                    onClick={() => {
+                      setEditingItem({});
+                      setIsModalOpen(true);
+                    }}
+                    className="bg-blue-700 text-white p-3 rounded-xl shadow-lg hover:bg-blue-800 transition-all active:scale-95"
+                  >
+                    <Plus size={24} />
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="space-y-4">
             {activeTab === 'stats' && (
@@ -796,6 +870,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
               </div>
             ))}
 
+            {activeTab === 'principal' && <PrincipalManager />}
+            {activeTab === 'history' && <HistoryManager />}
+            {activeTab === 'orgStructure' && <OrgStructureManager />}
+            {activeTab === 'agenda' && <AgendaManager />}
+            {activeTab === 'calendar' && <CalendarManager />}
+            {activeTab === 'curriculum' && <CurriculumManager />}
+            {activeTab === 'ppdb' && <PpdbManager />}
+            {activeTab === 'downloads' && <DownloadManager />}
             {activeTab === 'grades' && <GradeManager />}
             {activeTab === 'admins' && <AdminAccountManager />}
           </div>

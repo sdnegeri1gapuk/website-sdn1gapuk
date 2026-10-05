@@ -6,16 +6,18 @@ import { DownloadItem } from '../types';
 
 interface DownloadSectionProps {
   lang: 'id' | 'en';
+  downloadList?: DownloadItem[];
 }
 
-export const DownloadSection: React.FC<DownloadSectionProps> = ({ lang }) => {
+export const DownloadSection: React.FC<DownloadSectionProps> = ({ lang, downloadList }) => {
+  const activeDownloads = downloadList && downloadList.length > 0 ? downloadList : DOWNLOAD_ITEMS;
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   const categories = ['ALL', 'Formulir', 'Akademik', 'Regulasi', 'Panduan'];
 
-  const filteredItems = DOWNLOAD_ITEMS.filter(item => {
+  const filteredItems = activeDownloads.filter(item => {
     const matchCat = selectedCategory === 'ALL' || item.category === selectedCategory;
     const matchSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                         (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase()));

@@ -2,13 +2,18 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { UserCheck, FileCheck, ArrowRight, Download, Calendar, ShieldCheck, Users, HelpCircle } from 'lucide-react';
 import { PPDB_REQUIREMENTS, PPDB_FLOW } from '../data/schoolStructure';
+import { PpdbSettings } from '../types';
 
 interface PpdbSectionProps {
   lang: 'id' | 'en';
   onOpenRegistration: () => void;
+  ppdbData?: PpdbSettings;
 }
 
-export const PpdbSection: React.FC<PpdbSectionProps> = ({ lang, onOpenRegistration }) => {
+export const PpdbSection: React.FC<PpdbSectionProps> = ({ lang, onOpenRegistration, ppdbData }) => {
+  const activeReqs = ppdbData?.requirements && ppdbData.requirements.length > 0 ? ppdbData.requirements : PPDB_REQUIREMENTS;
+  const activeFlow = ppdbData?.flow && ppdbData.flow.length > 0 ? ppdbData.flow : PPDB_FLOW;
+
   const downloadFormTemplate = () => {
     const content = `=====================================================
 FORMULIR PENDAFTARAN PESERTA DIDIK BARU (PPDB)
@@ -122,7 +127,7 @@ Orang Tua / Wali Murid,                           Petugas Pendaftaran,
             </div>
 
             <ul className="space-y-3.5">
-              {PPDB_REQUIREMENTS.map((req, i) => (
+              {activeReqs.map((req, i) => (
                 <li key={i} className="flex items-start gap-3 text-sm text-slate-700">
                   <div className="w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
                     <ShieldCheck size={14} />
@@ -152,7 +157,7 @@ Orang Tua / Wali Murid,                           Petugas Pendaftaran,
             </div>
 
             <div className="space-y-4">
-              {PPDB_FLOW.map((flow, i) => (
+              {activeFlow.map((flow, i) => (
                 <div key={i} className="flex items-start gap-4 p-3.5 rounded-2xl bg-slate-50/80 border border-slate-100/70">
                   <div className="w-8 h-8 rounded-xl bg-blue-700 text-white font-bold flex items-center justify-center shrink-0 text-sm">
                     {flow.step}

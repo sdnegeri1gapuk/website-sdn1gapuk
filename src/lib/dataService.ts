@@ -24,7 +24,15 @@ export const collections = {
   students: 'students',
   grades: 'grades',
   admins: 'admins',
-  config: 'settings/config'
+  config: 'settings/config',
+  agenda: 'agenda',
+  downloads: 'downloads',
+  principal: 'settings/principal',
+  history: 'settings/history',
+  orgStructure: 'settings/org_structure',
+  curriculum: 'settings/curriculum',
+  calendar: 'settings/academic_calendar',
+  ppdb: 'settings/ppdb'
 };
 
 // Generic error handler as per integration guidelines
@@ -170,6 +178,80 @@ export const syncData = {
     );
   },
 
+  subscribeAgenda: (callback: (data: any[]) => void) => {
+    return onSnapshot(collection(db, collections.agenda), 
+      (snapshot) => {
+        const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        callback(items);
+      },
+      (error) => handleFirestoreError(error, 'list', collections.agenda)
+    );
+  },
+
+  subscribeDownloads: (callback: (data: any[]) => void) => {
+    return onSnapshot(collection(db, collections.downloads), 
+      (snapshot) => {
+        const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        callback(items);
+      },
+      (error) => handleFirestoreError(error, 'list', collections.downloads)
+    );
+  },
+
+  subscribePrincipal: (callback: (data: any) => void) => {
+    return onSnapshot(doc(db, collections.principal), 
+      (snapshot) => {
+        callback(snapshot.exists() ? snapshot.data() : null);
+      },
+      (error) => handleFirestoreError(error, 'get', collections.principal)
+    );
+  },
+
+  subscribeHistory: (callback: (data: any) => void) => {
+    return onSnapshot(doc(db, collections.history), 
+      (snapshot) => {
+        callback(snapshot.exists() ? snapshot.data() : null);
+      },
+      (error) => handleFirestoreError(error, 'get', collections.history)
+    );
+  },
+
+  subscribeOrgStructure: (callback: (data: any) => void) => {
+    return onSnapshot(doc(db, collections.orgStructure), 
+      (snapshot) => {
+        callback(snapshot.exists() ? snapshot.data() : null);
+      },
+      (error) => handleFirestoreError(error, 'get', collections.orgStructure)
+    );
+  },
+
+  subscribeCurriculum: (callback: (data: any) => void) => {
+    return onSnapshot(doc(db, collections.curriculum), 
+      (snapshot) => {
+        callback(snapshot.exists() ? snapshot.data() : null);
+      },
+      (error) => handleFirestoreError(error, 'get', collections.curriculum)
+    );
+  },
+
+  subscribeAcademicCalendar: (callback: (data: any) => void) => {
+    return onSnapshot(doc(db, collections.calendar), 
+      (snapshot) => {
+        callback(snapshot.exists() ? snapshot.data() : null);
+      },
+      (error) => handleFirestoreError(error, 'get', collections.calendar)
+    );
+  },
+
+  subscribePpdbSettings: (callback: (data: any) => void) => {
+    return onSnapshot(doc(db, collections.ppdb), 
+      (snapshot) => {
+        callback(snapshot.exists() ? snapshot.data() : null);
+      },
+      (error) => handleFirestoreError(error, 'get', collections.ppdb)
+    );
+  },
+
   // Save/Update functions
   saveItem: async (col: string, item: any) => {
     try {
@@ -206,6 +288,58 @@ export const syncData = {
       await setDoc(doc(db, collections.profile), { ...profile, updatedAt: new Date().toISOString() });
     } catch (error) {
       handleFirestoreError(error, 'write', collections.profile);
+    }
+  },
+
+  savePrincipal: async (principal: any) => {
+    try {
+      if (principal.photoUrl) {
+        principal.photoUrl = formatGoogleDriveUrl(principal.photoUrl);
+      }
+      await setDoc(doc(db, collections.principal), { ...principal, updatedAt: new Date().toISOString() });
+    } catch (error) {
+      handleFirestoreError(error, 'write', collections.principal);
+    }
+  },
+
+  saveHistory: async (history: any) => {
+    try {
+      await setDoc(doc(db, collections.history), { ...history, updatedAt: new Date().toISOString() });
+    } catch (error) {
+      handleFirestoreError(error, 'write', collections.history);
+    }
+  },
+
+  saveOrgStructure: async (org: any) => {
+    try {
+      const dataToSave = Array.isArray(org) ? { members: org } : org;
+      await setDoc(doc(db, collections.orgStructure), { ...dataToSave, updatedAt: new Date().toISOString() });
+    } catch (error) {
+      handleFirestoreError(error, 'write', collections.orgStructure);
+    }
+  },
+
+  saveCurriculum: async (curriculum: any) => {
+    try {
+      await setDoc(doc(db, collections.curriculum), { ...curriculum, updatedAt: new Date().toISOString() });
+    } catch (error) {
+      handleFirestoreError(error, 'write', collections.curriculum);
+    }
+  },
+
+  saveAcademicCalendar: async (calendar: any) => {
+    try {
+      await setDoc(doc(db, collections.calendar), { ...calendar, updatedAt: new Date().toISOString() });
+    } catch (error) {
+      handleFirestoreError(error, 'write', collections.calendar);
+    }
+  },
+
+  savePpdbSettings: async (ppdb: any) => {
+    try {
+      await setDoc(doc(db, collections.ppdb), { ...ppdb, updatedAt: new Date().toISOString() });
+    } catch (error) {
+      handleFirestoreError(error, 'write', collections.ppdb);
     }
   },
 

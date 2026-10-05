@@ -6,7 +6,7 @@ import {
   Mic2, Heart, Camera, Monitor, Users, Globe, 
   Star, ChevronRight, CheckCircle2, Sparkles
 } from 'lucide-react';
-import { ScheduleItem, ExtraItem } from '../types';
+import { ScheduleItem, ExtraItem, CurriculumInfo } from '../types';
 import { CURRICULUM_INFO } from '../data/schoolStructure';
 
 interface AkademikSectionProps {
@@ -16,6 +16,7 @@ interface AkademikSectionProps {
   selectedGrade: string;
   setSelectedGrade: (grade: string) => void;
   onSelectExtra: (extra: ExtraItem) => void;
+  curriculumData?: CurriculumInfo;
 }
 
 export const AkademikSection: React.FC<AkademikSectionProps> = ({
@@ -24,8 +25,11 @@ export const AkademikSection: React.FC<AkademikSectionProps> = ({
   extraList,
   selectedGrade,
   setSelectedGrade,
-  onSelectExtra
+  onSelectExtra,
+  curriculumData
 }) => {
+  const activeCurriculum = curriculumData || CURRICULUM_INFO;
+
   const [activeSubTab, setActiveSubTab] = useState<'kurikulum' | 'jadwal' | 'ekskul'>('kurikulum');
   const [activeDay, setActiveDay] = useState<string>('ALL');
 
@@ -105,26 +109,26 @@ export const AkademikSection: React.FC<AkademikSectionProps> = ({
                   {lang === 'id' ? 'Standar Nasional Pendidikan' : 'National Education Standard'}
                 </span>
                 <h3 className="text-2xl md:text-4xl font-bold mb-4">
-                  {lang === 'id' ? CURRICULUM_INFO.title : CURRICULUM_INFO.titleEn}
+                  {lang === 'id' ? activeCurriculum.title : (activeCurriculum.titleEn || activeCurriculum.title)}
                 </h3>
                 <p className="text-blue-100 text-sm md:text-base leading-relaxed">
-                  {lang === 'id' ? CURRICULUM_INFO.descriptionId : CURRICULUM_INFO.descriptionEn}
+                  {lang === 'id' ? activeCurriculum.descriptionId : (activeCurriculum.descriptionEn || activeCurriculum.descriptionId)}
                 </p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {CURRICULUM_INFO.pillars.map((pillar, i) => (
+              {activeCurriculum.pillars.map((pillar, i) => (
                 <div key={i} className="bg-slate-50 rounded-3xl p-6 border border-slate-100 flex flex-col justify-between hover:shadow-md transition-shadow">
                   <div>
                     <div className="w-10 h-10 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold mb-4">
                       <Sparkles size={20} />
                     </div>
                     <h4 className="font-bold text-slate-900 text-base mb-2">
-                      {lang === 'id' ? pillar.titleId : pillar.titleEn}
+                      {lang === 'id' ? pillar.titleId : (pillar.titleEn || pillar.titleId)}
                     </h4>
                     <p className="text-slate-500 text-xs leading-relaxed">
-                      {lang === 'id' ? pillar.descId : pillar.descEn}
+                      {lang === 'id' ? pillar.descId : (pillar.descEn || pillar.descId)}
                     </p>
                   </div>
                 </div>

@@ -66,6 +66,18 @@ service cloud.firestore {
       allow write: if isMasterAdmin() && isValidId(achievementId);
     }
 
+    // Koleksi Agenda Sekolah
+    match /agenda/{agendaId} {
+      allow read: if true;
+      allow write: if isMasterAdmin() && isValidId(agendaId);
+    }
+
+    // Koleksi Dokumen & Download
+    match /downloads/{downloadId} {
+      allow read: if true;
+      allow write: if isMasterAdmin() && isValidId(downloadId);
+    }
+
     // Koleksi Siswa
     match /students/{studentId} {
       allow read: if isSignedIn();

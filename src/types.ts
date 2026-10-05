@@ -111,5 +111,79 @@ export interface DownloadItem {
   fileSize: string;
   date: string;
   description?: string;
+  fileUrl?: string;
+}
+
+export interface PrincipalInfo {
+  name: string;
+  title: string;
+  titleEn?: string;
+  nip: string;
+  photoUrl: string;
+  greetingId: string;
+  greetingEn?: string;
+}
+
+export interface HistoryMilestone {
+  year: string;
+  titleId: string;
+  titleEn?: string;
+  descId: string;
+  descEn?: string;
+}
+
+export interface SchoolHistoryInfo {
+  titleId: string;
+  titleEn?: string;
+  summaryId: string;
+  summaryEn?: string;
+  milestones: HistoryMilestone[];
+}
+
+export interface OrgStructureMember {
+  id?: string;
+  role: string;
+  roleEn?: string;
+  name: string;
+  level: number;
+}
+
+export interface CurriculumPillar {
+  titleId: string;
+  titleEn?: string;
+  descId: string;
+  descEn?: string;
+}
+
+export interface CurriculumInfo {
+  title: string;
+  titleEn?: string;
+  descriptionId: string;
+  descriptionEn?: string;
+  pillars: CurriculumPillar[];
+}
+
+export interface CalendarEvent {
+  date: string;
+  title: string;
+}
+
+export interface AcademicCalendarInfo {
+  semesterGanjil: {
+    period: string;
+    events: CalendarEvent[];
+  };
+  semesterGenap: {
+    period: string;
+    events: CalendarEvent[];
+  };
+}
+
+export interface PpdbSettings {
+  title?: string;
+  subtitle?: string;
+  desc?: string;
+  requirements: Array<{ text: string; highlight?: boolean }>;
+  flow: Array<{ step: string; title: string; desc: string }>;
 }
 

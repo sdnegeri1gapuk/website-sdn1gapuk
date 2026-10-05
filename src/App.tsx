@@ -23,7 +23,11 @@ import {
   useTranslatedAchievements, 
   useTranslatedSchedule 
 } from './lib/translationService';
-import { NewsItem, GalleryItem, ScheduleItem, ExtraItem, StaffItem, AchievementItem } from './types';
+import { 
+  NewsItem, GalleryItem, ScheduleItem, ExtraItem, StaffItem, AchievementItem,
+  AgendaItem, DownloadItem, PrincipalInfo, SchoolHistoryInfo, OrgStructureMember, 
+  CurriculumInfo, AcademicCalendarInfo, PpdbSettings 
+} from './types';
 import { Login } from './components/Login';
 import { AdminDashboard } from './components/AdminDashboard';
 import { Navigation } from './components/Navigation';
@@ -94,6 +98,14 @@ export default function App() {
   const [extraData, setExtraData] = useState<ExtraItem[]>([]);
   const [staffData, setStaffData] = useState<StaffItem[]>([]);
   const [achievementsData, setAchievementsData] = useState<AchievementItem[]>([]);
+  const [agendaData, setAgendaData] = useState<AgendaItem[]>([]);
+  const [downloadsData, setDownloadsData] = useState<DownloadItem[]>([]);
+  const [principalData, setPrincipalData] = useState<PrincipalInfo | undefined>(undefined);
+  const [historyData, setHistoryData] = useState<SchoolHistoryInfo | undefined>(undefined);
+  const [orgStructureData, setOrgStructureData] = useState<OrgStructureMember[] | undefined>(undefined);
+  const [curriculumData, setCurriculumData] = useState<CurriculumInfo | undefined>(undefined);
+  const [calendarData, setCalendarData] = useState<AcademicCalendarInfo | undefined>(undefined);
+  const [ppdbData, setPpdbData] = useState<PpdbSettings | undefined>(undefined);
   const [showAllGallery, setShowAllGallery] = useState(false);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const [isTermsOpen, setIsTermsOpen] = useState(false);
@@ -201,6 +213,27 @@ export default function App() {
     const unsubExtras = syncData.subscribeExtra(setExtraData);
     const unsubStaff = syncData.subscribeStaff(setStaffData);
     const unsubAchievements = syncData.subscribeAchievements(setAchievementsData);
+    const unsubAgenda = syncData.subscribeAgenda(setAgendaData);
+    const unsubDownloads = syncData.subscribeDownloads(setDownloadsData);
+    const unsubPrincipal = syncData.subscribePrincipal((val) => {
+      if (val) setPrincipalData(val);
+    });
+    const unsubHistory = syncData.subscribeHistory((val) => {
+      if (val) setHistoryData(val);
+    });
+    const unsubOrg = syncData.subscribeOrgStructure((val) => {
+      if (val?.members) setOrgStructureData(val.members);
+      else if (Array.isArray(val)) setOrgStructureData(val);
+    });
+    const unsubCurriculum = syncData.subscribeCurriculum((val) => {
+      if (val) setCurriculumData(val);
+    });
+    const unsubCalendar = syncData.subscribeAcademicCalendar((val) => {
+      if (val) setCalendarData(val);
+    });
+    const unsubPpdb = syncData.subscribePpdbSettings((val) => {
+      if (val) setPpdbData(val);
+    });
     const unsubStats = syncData.subscribeStats((val) => {
       if (val) setStats(prev => ({ ...prev, ...val }));
     });
@@ -216,6 +249,14 @@ export default function App() {
       unsubExtras();
       unsubStaff();
       unsubAchievements();
+      unsubAgenda();
+      unsubDownloads();
+      unsubPrincipal();
+      unsubHistory();
+      unsubOrg();
+      unsubCurriculum();
+      unsubCalendar();
+      unsubPpdb();
       unsubStats();
       unsubProfile();
     };
@@ -319,7 +360,14 @@ export default function App() {
         </section>
 
         {/* 2. PROFIL (Sejarah, Visi & Misi, Kepala Sekolah, Guru & Tendik, Struktur Organisasi) */}
-        <ProfilSection lang={lang} profile={displayProfile} staffList={displayStaff} />
+        <ProfilSection 
+          lang={lang} 
+          profile={displayProfile} 
+          staffList={displayStaff} 
+          principalInfo={principalData}
+          schoolHistory={historyData}
+          orgStructure={orgStructureData}
+        />
 
         {/* 3. INFORMASI (Berita, Pengumuman, Agenda, Kalender Pendidikan) */}
         <InformasiSection 
@@ -327,6 +375,8 @@ export default function App() {
           newsList={displayNews} 
           onSelectNews={setSelectedNews} 
           onViewAllNews={() => setIsAllNewsOpen(true)} 
+          agendaList={agendaData}
+          calendarData={calendarData}
         />
 
         {/* 4. AKADEMIK (Kurikulum, Jadwal Pelajaran, Ekstrakurikuler) */}
@@ -337,6 +387,7 @@ export default function App() {
           selectedGrade={selectedGrade} 
           setSelectedGrade={setSelectedGrade} 
           onSelectExtra={setSelectedExtra} 
+          curriculumData={curriculumData}
         />
 
         {/* 5. PRESTASI */}
@@ -476,10 +527,10 @@ export default function App() {
         </section>
 
         {/* 7. PPDB */}
-        <PpdbSection lang={lang} onOpenRegistration={() => setIsRegistrationOpen(true)} />
+        <PpdbSection lang={lang} onOpenRegistration={() => setIsRegistrationOpen(true)} ppdbData={ppdbData} />
 
         {/* 8. DOWNLOAD */}
-        <DownloadSection lang={lang} />
+        <DownloadSection lang={lang} downloadList={downloadsData} />
 
         {/* Contact Section */}
         <section id="kontak" className="py-24 bg-white">

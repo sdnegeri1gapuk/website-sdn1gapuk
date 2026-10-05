@@ -4,16 +4,30 @@ import {
   Trophy, BookOpen, Clock, Users, Award, 
   ChevronRight, ArrowLeft, ArrowRight, Quote, Landmark, Network
 } from 'lucide-react';
-import { StaffItem } from '../types';
+import { StaffItem, PrincipalInfo, SchoolHistoryInfo, OrgStructureMember } from '../types';
 import { PRINCIPAL_INFO, SCHOOL_HISTORY, ORG_STRUCTURE } from '../data/schoolStructure';
 
 interface ProfilSectionProps {
   lang: 'id' | 'en';
   profile: { vision: string; mission: string; profileImage?: string };
   staffList: StaffItem[];
+  principalInfo?: PrincipalInfo;
+  schoolHistory?: SchoolHistoryInfo;
+  orgStructure?: OrgStructureMember[];
 }
 
-export const ProfilSection: React.FC<ProfilSectionProps> = ({ lang, profile, staffList }) => {
+export const ProfilSection: React.FC<ProfilSectionProps> = ({ 
+  lang, 
+  profile, 
+  staffList,
+  principalInfo,
+  schoolHistory,
+  orgStructure
+}) => {
+  const activePrincipal = principalInfo || PRINCIPAL_INFO;
+  const activeHistory = schoolHistory || SCHOOL_HISTORY;
+  const activeOrg = orgStructure && orgStructure.length > 0 ? orgStructure : ORG_STRUCTURE;
+
   const [activeTab, setActiveTab] = useState<'sejarah' | 'visi' | 'kepala' | 'guru' | 'struktur'>('sejarah');
   const staffScrollRef = useRef<HTMLDivElement>(null);
 
@@ -100,20 +114,20 @@ export const ProfilSection: React.FC<ProfilSectionProps> = ({ lang, profile, sta
               <div className="md:col-span-4 text-center md:text-left">
                 <div className="relative inline-block mx-auto md:mx-0 aspect-[3/4] w-56 md:w-full rounded-3xl overflow-hidden shadow-xl border-4 border-white bg-slate-200">
                   <img
-                    src={PRINCIPAL_INFO.photoUrl}
-                    alt={PRINCIPAL_INFO.name}
+                    src={activePrincipal.photoUrl}
+                    alt={activePrincipal.name}
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-blue-950/80 via-transparent to-transparent flex items-end p-4">
                     <span className="text-white text-[11px] font-bold tracking-wider uppercase">
-                      {lang === 'id' ? PRINCIPAL_INFO.title : PRINCIPAL_INFO.titleEn}
+                      {lang === 'id' ? activePrincipal.title : (activePrincipal.titleEn || activePrincipal.title)}
                     </span>
                   </div>
                 </div>
                 <div className="mt-4">
-                  <h3 className="text-xl font-bold text-blue-950">{PRINCIPAL_INFO.name}</h3>
-                  <p className="text-xs text-slate-500 font-mono mt-0.5">{PRINCIPAL_INFO.nip}</p>
+                  <h3 className="text-xl font-bold text-blue-950">{activePrincipal.name}</h3>
+                  <p className="text-xs text-slate-500 font-mono mt-0.5">{activePrincipal.nip}</p>
                 </div>
               </div>
 
@@ -130,7 +144,7 @@ export const ProfilSection: React.FC<ProfilSectionProps> = ({ lang, profile, sta
                     : 'Collaborating to Shape a Smart & Character-Driven Generation'}
                 </h3>
                 <div className="text-slate-600 text-sm md:text-base leading-relaxed space-y-4 whitespace-pre-line bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-2xs">
-                  {lang === 'id' ? PRINCIPAL_INFO.greetingId : PRINCIPAL_INFO.greetingEn}
+                  {lang === 'id' ? activePrincipal.greetingId : (activePrincipal.greetingEn || activePrincipal.greetingId)}
                 </div>
               </div>
             </div>
@@ -192,22 +206,22 @@ export const ProfilSection: React.FC<ProfilSectionProps> = ({ lang, profile, sta
             <div className="bg-blue-50/60 p-8 rounded-3xl border border-blue-100 text-slate-700 text-sm md:text-base leading-relaxed">
               <h3 className="text-xl font-bold text-blue-950 mb-3 flex items-center gap-2">
                 <Landmark size={22} className="text-blue-700" />
-                <span>{lang === 'id' ? SCHOOL_HISTORY.titleId : SCHOOL_HISTORY.titleEn}</span>
+                <span>{lang === 'id' ? activeHistory.titleId : (activeHistory.titleEn || activeHistory.titleId)}</span>
               </h3>
-              <p>{lang === 'id' ? SCHOOL_HISTORY.summaryId : SCHOOL_HISTORY.summaryEn}</p>
+              <p>{lang === 'id' ? activeHistory.summaryId : (activeHistory.summaryEn || activeHistory.summaryId)}</p>
             </div>
 
             {/* Milestones Timeline */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {SCHOOL_HISTORY.milestones.map((m, i) => (
+              {activeHistory.milestones.map((m, i) => (
                 <div key={i} className="bg-slate-50 p-6 rounded-3xl border border-slate-100 flex flex-col justify-between hover:shadow-md transition-shadow">
                   <div>
                     <span className="font-mono text-2xl font-black text-blue-700 block mb-2">{m.year}</span>
                     <h4 className="font-bold text-slate-900 text-base mb-2">
-                      {lang === 'id' ? m.titleId : m.titleEn}
+                      {lang === 'id' ? m.titleId : (m.titleEn || m.titleId)}
                     </h4>
                     <p className="text-slate-500 text-xs leading-relaxed">
-                      {lang === 'id' ? m.descId : m.descEn}
+                      {lang === 'id' ? m.descId : (m.descEn || m.descId)}
                     </p>
                   </div>
                 </div>
@@ -289,20 +303,24 @@ export const ProfilSection: React.FC<ProfilSectionProps> = ({ lang, profile, sta
             {/* Tree Chart Visual */}
             <div className="max-w-4xl mx-auto space-y-6">
               {/* Level 1: Komite */}
-              <div className="flex justify-center">
-                <div className="bg-amber-100 border-2 border-amber-300 text-amber-900 rounded-2xl px-6 py-3 text-center shadow-xs">
-                  <p className="text-[10px] font-black uppercase tracking-wider">Komite Sekolah</p>
-                  <p className="text-sm font-bold">H. Suwardi, S.Sos.</p>
+              {activeOrg.find(x => x.level === 1) && (
+                <div className="flex justify-center">
+                  <div className="bg-amber-100 border-2 border-amber-300 text-amber-900 rounded-2xl px-6 py-3 text-center shadow-xs">
+                    <p className="text-[10px] font-black uppercase tracking-wider">{lang === 'id' ? activeOrg.find(x => x.level === 1)?.role : (activeOrg.find(x => x.level === 1)?.roleEn || activeOrg.find(x => x.level === 1)?.role)}</p>
+                    <p className="text-sm font-bold">{activeOrg.find(x => x.level === 1)?.name}</p>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="w-0.5 h-6 bg-slate-300 mx-auto" />
 
               {/* Level 2: Kepala Sekolah */}
               <div className="flex justify-center">
                 <div className="bg-blue-800 text-white rounded-2xl px-8 py-4 text-center shadow-md border-2 border-blue-600">
-                  <p className="text-[10px] font-black uppercase tracking-wider text-blue-200">Kepala Sekolah</p>
-                  <p className="text-base font-bold">H. Lalu Ahmad Rusydi, S.Pd., M.Pd.</p>
+                  <p className="text-[10px] font-black uppercase tracking-wider text-blue-200">
+                    {lang === 'id' ? (activeOrg.find(x => x.level === 2)?.role || 'Kepala Sekolah') : (activeOrg.find(x => x.level === 2)?.roleEn || 'Principal')}
+                  </p>
+                  <p className="text-base font-bold">{activeOrg.find(x => x.level === 2)?.name || activePrincipal.name}</p>
                 </div>
               </div>
 
@@ -310,25 +328,29 @@ export const ProfilSection: React.FC<ProfilSectionProps> = ({ lang, profile, sta
 
               {/* Level 3: Koordinator Unit */}
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                {ORG_STRUCTURE.filter(x => x.level === 3).map((item, idx) => (
+                {activeOrg.filter(x => x.level === 3).map((item, idx) => (
                   <div key={idx} className="bg-white p-3.5 rounded-2xl border border-slate-200 text-center shadow-2xs">
-                    <p className="text-[9px] font-bold text-blue-700 uppercase tracking-tight line-clamp-1">{item.role}</p>
+                    <p className="text-[9px] font-bold text-blue-700 uppercase tracking-tight line-clamp-1">{lang === 'id' ? item.role : (item.roleEn || item.role)}</p>
                     <p className="text-xs font-bold text-slate-800 mt-1">{item.name}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="w-0.5 h-6 bg-slate-300 mx-auto" />
+              {activeOrg.filter(x => x.level === 4).length > 0 && (
+                <>
+                  <div className="w-0.5 h-6 bg-slate-300 mx-auto" />
 
-              {/* Level 4: Pelaksana Teknis & Staf */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto">
-                {ORG_STRUCTURE.filter(x => x.level === 4).map((item, idx) => (
-                  <div key={idx} className="bg-white p-3.5 rounded-2xl border border-slate-200 text-center shadow-2xs">
-                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tight">{item.role}</p>
-                    <p className="text-xs font-bold text-slate-800 mt-1">{item.name}</p>
+                  {/* Level 4: Pelaksana Teknis & Staf */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-xl mx-auto">
+                    {activeOrg.filter(x => x.level === 4).map((item, idx) => (
+                      <div key={idx} className="bg-white p-3.5 rounded-2xl border border-slate-200 text-center shadow-2xs">
+                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-tight">{lang === 'id' ? item.role : (item.roleEn || item.role)}</p>
+                        <p className="text-xs font-bold text-slate-800 mt-1">{item.name}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </>
+              )}
             </div>
           </div>
         )}
