@@ -3,13 +3,25 @@ export const translations = {
   id: {
     nav: {
       home: 'Beranda',
-      visionMission: 'Visi Misi',
-      registration: 'Pendaftaran',
+      profil: 'Profil',
+      sejarah: 'Sejarah',
+      visiMisi: 'Visi & Misi',
+      kepalaSekolah: 'Kepala Sekolah',
+      guruTendik: 'Guru & Tendik',
+      strukturOrganisasi: 'Struktur Organisasi',
+      informasi: 'Informasi',
+      berita: 'Berita',
+      pengumuman: 'Pengumuman',
+      agenda: 'Agenda',
+      kalenderPendidikan: 'Kalender Pendidikan',
+      akademik: 'Akademik',
+      kurikulum: 'Kurikulum',
+      jadwal: 'Jadwal Pelajaran',
+      ekskul: 'Ekstrakurikuler',
       prestasi: 'Prestasi',
-      news: 'Berita',
-      jadwal: 'Jadwal',
       galeri: 'Galeri',
-      staf: 'Staf & Guru',
+      ppdb: 'PPDB',
+      download: 'Download',
       contact: 'Kontak',
       hubungi: 'Hubungi Kami',
       adminPanel: 'ADMIN PANEL - SDN 1 GAPUK',
@@ -20,8 +32,8 @@ export const translations = {
       futureTitle: 'Masa Depan',
       futureSub: 'Dimulai Disini.',
       description: 'Memberikan pendidikan terbaik dengan kurikulum modern yang membentuk karakter berakhlak mulia dan unggul dalam prestasi.',
-      registerNow: 'Daftar Sekarang',
-      knowUs: 'Kenali Kami'
+      registerNow: 'Daftar PPDB Online',
+      knowUs: 'Jelajahi Profil'
     },
     stats: {
       activeStudents: 'Siswa Aktif',
@@ -32,17 +44,20 @@ export const translations = {
     profile: {
       visionMissionTitle: 'Visi & Misi Kami',
       visionTitle: 'Visi Sekolah',
-      missionTitle: 'Misi Utama'
+      missionTitle: 'Misi Utama',
+      principalTitle: 'Sambutan Kepala Sekolah',
+      historyTitle: 'Sejarah Singkat Sekolah',
+      orgTitle: 'Struktur Organisasi Sekolah'
     },
     news: {
       title: 'Berita & Pengumuman',
-      viewAll: 'Lihat Semua',
+      viewAll: 'Lihat Semua Berita',
       readMore: 'Baca Selengkapnya',
       empty: 'Belum ada berita yang diterbitkan.'
     },
     schedule: {
       title: 'Jadwal Pelajaran',
-      description: 'Pilih kelas dan hari untuk melihat jadwal rutin harian.',
+      description: 'Jadwal lengkap kegiatan belajar mengajar per kelas dari Senin sampai Sabtu.',
       hour: 'Jam Pelajaran',
       empty: 'Jadwal untuk {grade} hari {day} belum tersedia.'
     },
@@ -59,15 +74,31 @@ export const translations = {
       showLess: 'Sembunyikan'
     },
     staff: {
-      title: 'Staf & Tenaga Pendidik',
+      title: 'Guru & Tenaga Kependidikan',
       description: 'Mengenal lebih dekat para pendidik dan staf yang berdedikasi tinggi di SDN 1 Gapuk.',
       empty: 'Data staf sedang diperbarui.',
       position: 'Jabatan/Mata Pelajaran',
       name: 'Nama Lengkap'
     },
+    ppdb: {
+      title: 'Penerimaan Peserta Didik Baru (PPDB)',
+      subtitle: 'Tahun Ajaran 2026/2027',
+      desc: 'SD Negeri 1 Gapuk membuka kesempatan bagi putra-putri Anda untuk menempuh pendidikan dasar yang unggul, religius, dan berkarakter.',
+      registerNow: 'Daftar Sekarang',
+      requirements: 'Persyaratan Pendaftaran',
+      flow: 'Alur Pendaftaran',
+      quota: 'Daya Tampung: 4 Rombel (100 Siswa)',
+      scheduleTitle: 'Jadwal Pendaftaran'
+    },
+    downloads: {
+      title: 'Pusat Unduhan (Download)',
+      subtitle: 'Unduh dokumen resmi, formulir, kalender akademik, dan panduan sekolah.',
+      empty: 'Belum ada dokumen yang tersedia untuk diunduh.',
+      downloadBtn: 'Unduh Dokumen'
+    },
     cta: {
       title: 'Ayo Bergabung Bersama Kami!',
-      description: 'Pendaftaran Siswa Baru Tahun Ajaran 2026/2027 telah dibuka. Dapatkan penawaran khusus dan kemudahan biaya pendaftaran selama bulan ini.',
+      description: 'Pendaftaran Siswa Baru Tahun Ajaran 2026/2027 telah dibuka. Dapatkan kemudahan pendaftaran online selama periode ini.',
       registerOnline: 'Daftar Online Sekarang',
       contactUs: 'Hubungi Kami'
     },
@@ -111,13 +142,25 @@ export const translations = {
   en: {
     nav: {
       home: 'Home',
-      visionMission: 'Vision & Mission',
-      registration: 'Registration',
+      profil: 'Profile',
+      sejarah: 'History',
+      visiMisi: 'Vision & Mission',
+      kepalaSekolah: 'Principal',
+      guruTendik: 'Teachers & Staff',
+      strukturOrganisasi: 'Organization Structure',
+      informasi: 'Information',
+      berita: 'News',
+      pengumuman: 'Announcements',
+      agenda: 'Agenda',
+      kalenderPendidikan: 'Academic Calendar',
+      akademik: 'Academics',
+      kurikulum: 'Curriculum',
+      jadwal: 'Class Schedule',
+      ekskul: 'Extracurricular',
       prestasi: 'Achievements',
-      news: 'News',
-      jadwal: 'Schedule',
       galeri: 'Gallery',
-      staf: 'Staff & Teachers',
+      ppdb: 'Admission (PPDB)',
+      download: 'Download',
       contact: 'Contact',
       hubungi: 'Contact Us',
       adminPanel: 'ADMIN PANEL - SDN 1 GAPUK',
@@ -128,8 +171,8 @@ export const translations = {
       futureTitle: 'The Future',
       futureSub: 'Starts Here.',
       description: 'Providing the best education with a modern curriculum that forms noble character and excellence in achievement.',
-      registerNow: 'Register Now',
-      knowUs: 'Get to Know Us'
+      registerNow: 'Online Admission (PPDB)',
+      knowUs: 'Explore Profile'
     },
     stats: {
       activeStudents: 'Active Students',
@@ -140,17 +183,20 @@ export const translations = {
     profile: {
       visionMissionTitle: 'Our Vision & Mission',
       visionTitle: 'School Vision',
-      missionTitle: 'Main Mission'
+      missionTitle: 'Main Mission',
+      principalTitle: 'Principal Message',
+      historyTitle: 'Brief History',
+      orgTitle: 'School Organizational Structure'
     },
     news: {
       title: 'News & Announcements',
-      viewAll: 'View All',
+      viewAll: 'View All News',
       readMore: 'Read More',
       empty: 'No news published yet.'
     },
     schedule: {
       title: 'Class Schedule',
-      description: 'Select grade and day to see daily routine schedule.',
+      description: 'Complete class timetable from Monday to Saturday.',
       hour: 'Lesson Hour',
       empty: 'Schedule for {grade} on {day} is not available yet.'
     },
@@ -167,15 +213,31 @@ export const translations = {
       showLess: 'Show Less'
     },
     staff: {
-      title: 'Staff & Educators',
+      title: 'Teachers & Staff Members',
       description: 'Get to know the highly dedicated educators and staff at SDN 1 Gapuk.',
       empty: 'Staff data is being updated.',
       position: 'Position/Subject',
       name: 'Full Name'
     },
+    ppdb: {
+      title: 'New Student Admission (PPDB)',
+      subtitle: 'Academic Year 2026/2027',
+      desc: 'SD Negeri 1 Gapuk welcomes prospective students for excellent, character-building, and religious elementary education.',
+      registerNow: 'Register Online',
+      requirements: 'Requirements',
+      flow: 'Registration Flow',
+      quota: 'Capacity: 4 Classes (100 Students)',
+      scheduleTitle: 'Admission Schedule'
+    },
+    downloads: {
+      title: 'Download Center',
+      subtitle: 'Download official documents, forms, academic calendars, and school guidelines.',
+      empty: 'No download documents available yet.',
+      downloadBtn: 'Download Document'
+    },
     cta: {
       title: 'Come Join Us!',
-      description: 'New Student Admission for Academic Year 2026/2027 is now open. Get special offers and ease of registration during this month.',
+      description: 'New Student Admission for Academic Year 2026/2027 is now open. Register online easily during this period.',
       registerOnline: 'Register Online Now',
       contactUs: 'Contact Us'
     },
@@ -217,3 +279,4 @@ export const translations = {
     }
   }
 };
+

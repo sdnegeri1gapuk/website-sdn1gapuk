@@ -26,6 +26,12 @@ import {
 import { NewsItem, GalleryItem, ScheduleItem, ExtraItem, StaffItem, AchievementItem } from './types';
 import { Login } from './components/Login';
 import { AdminDashboard } from './components/AdminDashboard';
+import { Navigation } from './components/Navigation';
+import { ProfilSection } from './components/ProfilSection';
+import { InformasiSection } from './components/InformasiSection';
+import { AkademikSection } from './components/AkademikSection';
+import { PpdbSection } from './components/PpdbSection';
+import { DownloadSection } from './components/DownloadSection';
 import { auth, onAuthStateChanged, db } from './lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
@@ -238,97 +244,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-blue-100 selection:text-blue-900 w-full max-w-full overflow-x-hidden">
-      {/* Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'}`}>
-        <div className="max-w-7xl mx-auto px-4 md:px-8 flex justify-between items-center">
-          <a href="#beranda" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <div className="w-12 h-12 flex items-center justify-center">
-              <img 
-                src="https://lh3.googleusercontent.com/d/1sUaFfYHajE5E__zoW7DGQM9odSDDnwHg" 
-                alt="Logo SDN 1 Gapuk" 
-                className="w-full h-full object-contain"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-            <div>
-              <h1 className={`font-bold text-lg leading-none ${scrolled ? 'text-blue-900' : 'text-white'}`}>SD NEGERI 1 GAPUK</h1>
-              <p className={`text-[10px] uppercase tracking-wider font-semibold mt-1 ${scrolled ? 'text-slate-500' : 'text-blue-100'}`}>Cerdas, Berkarakter, Unggul</p>
-            </div>
-          </a>
-
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
-            <NavLink href="#beranda" scrolled={scrolled}>{t.nav.home}</NavLink>
-            <NavLink href="#visi-misi" scrolled={scrolled}>{t.nav.visionMission}</NavLink>
-            <NavLink href="#pendaftaran" scrolled={scrolled}>{t.nav.registration}</NavLink>
-            <NavLink href="#prestasi" scrolled={scrolled}>{t.nav.prestasi}</NavLink>
-            <NavLink href="#berita" scrolled={scrolled}>{t.nav.news}</NavLink>
-            <NavLink href="#staf" scrolled={scrolled}>{t.nav.staf}</NavLink>
-            <NavLink href="#jadwal" scrolled={scrolled}>{t.nav.jadwal}</NavLink>
-            <NavLink href="#ekstrakurikuler" scrolled={scrolled}>{t.extra.title}</NavLink>
-            <NavLink href="#galeri" scrolled={scrolled}>{t.nav.galeri}</NavLink>
-            
-            {/* Language Switcher */}
-            <div className={`flex items-center gap-1 border rounded-full p-1 ${scrolled ? 'border-slate-200 bg-slate-50' : 'border-white/20 bg-white/10'}`}>
-              <button 
-                onClick={() => setLang('id')}
-                className={`text-[10px] font-bold px-2 py-1 rounded-full transition-all ${lang === 'id' ? 'bg-blue-600 text-white shadow-sm' : scrolled ? 'text-slate-400' : 'text-white/50'}`}
-              >
-                ID
-              </button>
-              <button 
-                onClick={() => setLang('en')}
-                className={`text-[10px] font-bold px-2 py-1 rounded-full transition-all ${lang === 'en' ? 'bg-blue-600 text-white shadow-sm' : scrolled ? 'text-slate-400' : 'text-white/50'}`}
-              >
-                EN
-              </button>
-            </div>
-
-            <a 
-              href="#kontak"
-              className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-2.5 rounded-full font-semibold transition-all shadow-lg hover:shadow-blue-200 active:scale-95"
-            >
-              {t.nav.hubungi}
-            </a>
-          </div>
-
-          {/* Mobile Menu Toggle */}
-          <div className="flex items-center gap-4 md:hidden">
-            <button 
-              onClick={() => setLang(lang === 'id' ? 'en' : 'id')}
-              className={`text-xs font-bold w-10 h-10 rounded-full border flex items-center justify-center ${scrolled ? 'border-slate-200 text-blue-900' : 'border-white/30 text-white'}`}
-            >
-              {lang.toUpperCase()}
-            </button>
-            <button className={`p-2 ${scrolled ? 'text-blue-900' : 'text-white'}`} onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="absolute top-full left-0 right-0 bg-white shadow-xl border-t border-slate-100 p-4 flex flex-col gap-4 md:hidden"
-            >
-              <NavLink href="#beranda" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.nav.home}</NavLink>
-              <NavLink href="#visi-misi" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.nav.visionMission}</NavLink>
-              <NavLink href="#pendaftaran" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.nav.registration}</NavLink>
-              <NavLink href="#prestasi" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.nav.prestasi}</NavLink>
-              <NavLink href="#berita" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.nav.news}</NavLink>
-              <NavLink href="#staf" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.nav.staf}</NavLink>
-              <NavLink href="#jadwal" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.nav.jadwal}</NavLink>
-              <NavLink href="#ekstrakurikuler" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.extra.title}</NavLink>
-              <NavLink href="#galeri" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.nav.galeri}</NavLink>
-              <NavLink href="#kontak" onClick={() => setIsMenuOpen(false)} scrolled={true}>{t.nav.contact}</NavLink>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
+      {/* Hierarchical Navigation matching school structure */}
+      <Navigation lang={lang} setLang={setLang} scrolled={scrolled} />
 
       <main>
         {/* Hero Section */}
@@ -401,62 +318,28 @@ export default function App() {
           </div>
         </section>
 
-        {/* Vision & Mission */}
-        <section id="visi-misi" className="py-24 max-w-7xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-950 mb-4">{t.profile.visionMissionTitle}</h2>
-            <div className="w-20 h-1.5 bg-blue-600 mx-auto rounded-full" />
-          </div>
+        {/* 2. PROFIL (Sejarah, Visi & Misi, Kepala Sekolah, Guru & Tendik, Struktur Organisasi) */}
+        <ProfilSection lang={lang} profile={displayProfile} staffList={displayStaff} />
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl"
-            >
-              <img 
-                src={displayProfile?.profileImage || 'https://images.unsplash.com/photo-1523050335392-93851179ae22?auto=format&fit=crop&q=80'} 
-                className="w-full h-full object-cover" 
-                alt="Vision"
-                referrerPolicy="no-referrer"
-              />
-            </motion.div>
-            
-            <div className="space-y-8">
-              <div className="bg-white p-8 rounded-3xl shadow-lg border border-slate-100">
-                <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center gap-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
-                    <Trophy size={18} />
-                  </div>
-                  {t.profile.visionTitle}
-                </h3>
-                <p className="text-slate-600 leading-relaxed italic">
-                  "{displayProfile?.vision || ''}"
-                </p>
-              </div>
+        {/* 3. INFORMASI (Berita, Pengumuman, Agenda, Kalender Pendidikan) */}
+        <InformasiSection 
+          lang={lang} 
+          newsList={displayNews} 
+          onSelectNews={setSelectedNews} 
+          onViewAllNews={() => setIsAllNewsOpen(true)} 
+        />
 
-              <div className="bg-white p-8 rounded-3xl shadow-lg border border-slate-100">
-                <h3 className="text-xl font-bold text-blue-900 mb-4 flex items-center gap-3">
-                  <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
-                    <BookOpen size={18} />
-                  </div>
-                  {t.profile.missionTitle}
-                </h3>
-                <ul className="space-y-3 text-slate-600">
-                  {(displayProfile?.mission || '').split('\n').filter(Boolean).map((point, i) => (
-                    <li key={i} className="flex gap-3">
-                      <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
-                      {point}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* 4. AKADEMIK (Kurikulum, Jadwal Pelajaran, Ekstrakurikuler) */}
+        <AkademikSection 
+          lang={lang} 
+          scheduleList={displaySchedule} 
+          extraList={displayExtras} 
+          selectedGrade={selectedGrade} 
+          setSelectedGrade={setSelectedGrade} 
+          onSelectExtra={setSelectedExtra} 
+        />
 
-        {/* Achievements Section */}
+        {/* 5. PRESTASI */}
         <section id="prestasi" className="py-24 bg-white overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
             <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
@@ -541,361 +424,7 @@ export default function App() {
           </div>
         </section>
 
-        {/* Staff Section */}
-        <section id="staf" className="py-20 max-w-7xl mx-auto px-4 md:px-8 relative">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-blue-950 mb-3">{t.staff.title}</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto text-sm">{t.staff.description}</p>
-            <div className="w-16 h-1 bg-blue-600 mx-auto rounded-full mt-4" />
-          </div>
-
-          <div className="relative group">
-            {/* Navigation Arrows */}
-            {displayStaff.length > 0 && (
-              <>
-                <button 
-                  onClick={() => scrollStaff('left')}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-6 z-30 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg border border-slate-100 text-blue-900 hover:bg-blue-600 hover:text-white transition-all opacity-0 group-hover:opacity-100 hidden md:flex"
-                >
-                  <ArrowLeft size={20} />
-                </button>
-                <button 
-                  onClick={() => scrollStaff('right')}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-6 z-30 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg border border-slate-100 text-blue-900 hover:bg-blue-600 hover:text-white transition-all opacity-0 group-hover:opacity-100 hidden md:flex"
-                >
-                  <ArrowRight size={20} />
-                </button>
-              </>
-            )}
-
-            <div 
-              ref={staffScrollRef}
-              className="flex gap-6 overflow-x-auto pb-4 scrollbar-none snap-x snap-mandatory scroll-smooth"
-              style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
-            >
-              {displayStaff.length > 0 ? displayStaff.map((person, i) => (
-                <motion.div
-                  key={person.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 }}
-                  className="group shrink-0 w-44 md:w-52 snap-center"
-                >
-                  <div className="relative mb-4">
-                    <div className="aspect-[3/4] rounded-[2rem] overflow-hidden shadow-lg border-4 border-white group-hover:border-blue-50 transition-all">
-                      <img 
-                        src={person.imageUrl || 'https://images.unsplash.com/photo-1544168190-79c17527004f?auto=format&fit=crop&q=80'} 
-                        alt={person.name} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        referrerPolicy="no-referrer"
-                      />
-                    </div>
-                    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white px-3 py-1.5 rounded-xl shadow-md border border-slate-50 whitespace-nowrap">
-                      <p className="text-[9px] font-bold text-blue-600 uppercase tracking-widest">{person.position}</p>
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <h4 className="font-bold text-base text-blue-950 leading-tight">{person.name}</h4>
-                    {person.education && <p className="text-[10px] text-slate-400 mt-1">{person.education}</p>}
-                  </div>
-                </motion.div>
-              )) : (
-                <div className="w-full py-16 text-center bg-slate-50 rounded-[2.5rem] border-2 border-dashed border-slate-200">
-                  <Users size={40} className="mx-auto text-slate-200 mb-3" />
-                  <p className="text-slate-400 text-sm italic">{t.staff.empty}</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* News Section */}
-        <section id="berita" className="py-24 bg-slate-100/50">
-          <div className="max-w-7xl mx-auto px-4 md:px-8">
-            <div className="flex justify-between items-end mb-12">
-              <div>
-                <h2 className="text-3xl font-bold text-blue-950 mb-4">{t.news.title}</h2>
-                <div className="w-16 h-1 bg-blue-600 rounded-full" />
-              </div>
-              <button 
-                onClick={() => setIsAllNewsOpen(true)}
-                className="text-blue-700 font-bold flex items-center gap-2 hover:gap-3 transition-all"
-              >
-                {t.news.viewAll} <ChevronRight size={18} />
-              </button>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {displayNews.length > 0 ? displayNews.map((news, i) => (
-                <motion.button 
-                  key={news.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  whileHover={{ y: -5 }}
-                  onClick={() => setSelectedNews(news)}
-                  className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-all group cursor-pointer text-left w-full"
-                >
-                  <div className="h-52 overflow-hidden">
-                    <img 
-                      src={news.imageUrl} 
-                      alt={news.title} 
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="bg-blue-50 text-blue-700 text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">
-                        {news.category}
-                      </span>
-                      <span className="text-slate-400 text-xs flex items-center gap-1">
-                        <Calendar size={12} /> {news.date}
-                      </span>
-                    </div>
-                    <h3 className="font-bold text-lg mb-3 text-blue-950 group-hover:text-blue-700 transition-colors line-clamp-2">
-                      {news.title}
-                    </h3>
-                    <p className="text-slate-600 text-sm mb-4 line-clamp-3">
-                      {news.excerpt}
-                    </p>
-                    <div className="pt-4 border-t border-slate-100 flex items-center text-blue-600 font-bold text-sm">
-                      {t.news.readMore} <ChevronRight size={16} />
-                    </div>
-                  </div>
-                </motion.button>
-              )) : (
-                <div className="col-span-3 text-center py-10 text-slate-400 font-medium">{t.news.empty}</div>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* Class Schedule Section */}
-        <section id="jadwal" className="py-24 max-w-7xl mx-auto px-4 sm:px-6 md:px-8 w-full box-border overflow-hidden">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <span className="text-blue-600 font-bold uppercase tracking-wider text-xs bg-blue-50 px-4 py-1.5 rounded-full inline-block mb-3">
-              {lang === 'id' ? 'Jadwal Pembelajaran' : 'Academic Timetable'}
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-950 mb-3">{t.schedule.title}</h2>
-            <p className="text-slate-500 text-sm md:text-base leading-relaxed">{t.schedule.description}</p>
-            <div className="w-16 h-1 bg-blue-600 mx-auto rounded-full mt-4" />
-          </div>
-
-          {/* Grade Selector */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-8 w-full min-w-0">
-            {(Array.from(new Set(displaySchedule.map(s => s.grade))).sort().length > 0 
-              ? Array.from(new Set(displaySchedule.map(s => s.grade))).sort() 
-              : ['Kelas 1', 'Kelas 2', 'Kelas 3', 'Kelas 4', 'Kelas 5', 'Kelas 6']
-            ).map((grade) => (
-              <button
-                key={grade}
-                onClick={() => setSelectedGrade(grade)}
-                className={`px-5 py-2.5 rounded-2xl text-xs md:text-sm font-bold transition-all ${
-                  selectedGrade === grade 
-                  ? 'bg-blue-800 text-white shadow-lg shadow-blue-900/20 scale-105' 
-                  : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-xs'
-                }`}
-              >
-                {grade}
-              </button>
-            ))}
-          </div>
-
-          {/* Day Filter Pills (Semua Hari as default, or quick focus on specific day) */}
-          <div className="flex items-center justify-start sm:justify-center gap-2 mb-10 overflow-x-auto pb-2 scrollbar-none w-full min-w-0">
-            {['ALL', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'].map((day) => {
-              const label = day === 'ALL' 
-                ? (lang === 'id' ? '🌟 Semua Hari' : '🌟 All Days') 
-                : (lang === 'id' ? day : {
-                    'Senin': 'Monday',
-                    'Selasa': 'Tuesday',
-                    'Rabu': 'Wednesday',
-                    'Kamis': 'Thursday',
-                    'Jumat': 'Friday',
-                    'Sabtu': 'Saturday'
-                  }[day] || day);
-              
-              const isSelected = activeTab === day;
-
-              return (
-                <button
-                  key={day}
-                  onClick={() => setActiveTab(day)}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 ${
-                    isSelected 
-                      ? 'bg-blue-600 text-white shadow-md' 
-                      : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
-                  }`}
-                >
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* All Days Timetable Grid for the selected class */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full min-w-0">
-            {['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
-              .filter(d => activeTab === 'ALL' || activeTab === d)
-              .map((day) => {
-                const daySchedule = displaySchedule.find(s => 
-                  (s.day?.toLowerCase() === day.toLowerCase() || 
-                   (day === 'Senin' && s.day?.toLowerCase() === 'monday') ||
-                   (day === 'Selasa' && s.day?.toLowerCase() === 'tuesday') ||
-                   (day === 'Rabu' && s.day?.toLowerCase() === 'wednesday') ||
-                   (day === 'Kamis' && s.day?.toLowerCase() === 'thursday') ||
-                   (day === 'Jumat' && s.day?.toLowerCase() === 'friday') ||
-                   (day === 'Sabtu' && s.day?.toLowerCase() === 'saturday')) && 
-                  (s.grade === selectedGrade || 
-                   (selectedGrade === 'Grade 1' && s.grade === 'Kelas 1') ||
-                   (selectedGrade === 'Grade 2' && s.grade === 'Kelas 2') ||
-                   (selectedGrade === 'Grade 3' && s.grade === 'Kelas 3') ||
-                   (selectedGrade === 'Grade 4' && s.grade === 'Kelas 4') ||
-                   (selectedGrade === 'Grade 5' && s.grade === 'Kelas 5') ||
-                   (selectedGrade === 'Grade 6' && s.grade === 'Kelas 6'))
-                );
-                const subjects = daySchedule?.subjects || [];
-                const dayName = lang === 'id' ? day : {
-                  'Senin': 'Monday',
-                  'Selasa': 'Tuesday',
-                  'Rabu': 'Wednesday',
-                  'Kamis': 'Thursday',
-                  'Jumat': 'Friday',
-                  'Sabtu': 'Saturday'
-                }[day] || day;
-
-                return (
-                  <motion.div 
-                    key={day}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="bg-white rounded-[2rem] p-6 shadow-sm hover:shadow-xl transition-all border border-slate-100 flex flex-col justify-between w-full min-w-0 box-border"
-                  >
-                    <div>
-                      {/* Day Header */}
-                      <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
-                        <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-10 h-10 bg-blue-50 text-blue-700 rounded-2xl flex items-center justify-center shrink-0">
-                            <Calendar size={18} />
-                          </div>
-                          <div className="min-w-0">
-                            <h3 className="font-bold text-lg text-blue-950 truncate">{dayName}</h3>
-                            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{selectedGrade}</span>
-                          </div>
-                        </div>
-                        <span className={`text-[10px] font-bold px-3 py-1 rounded-full shrink-0 ${subjects.length > 0 ? 'bg-blue-50 text-blue-700' : 'bg-slate-100 text-slate-400'}`}>
-                          {subjects.length > 0 ? `${subjects.length} ${lang === 'id' ? 'Mapel' : 'Subjects'}` : (lang === 'id' ? 'Libur' : 'No Class')}
-                        </span>
-                      </div>
-
-                      {/* Subjects List */}
-                      <div className="space-y-2.5">
-                        {subjects.length > 0 ? (
-                          subjects.map((sub, idx) => (
-                            <div 
-                              key={idx}
-                              className="bg-slate-50/80 hover:bg-blue-50/40 p-3 rounded-2xl transition-colors flex items-center justify-between gap-3 border border-slate-100"
-                            >
-                              <div className="flex items-center gap-2.5 min-w-0">
-                                <div className="w-6 h-6 rounded-lg bg-white text-blue-600 flex items-center justify-center shrink-0 border border-slate-100">
-                                  <BookOpen size={12} />
-                                </div>
-                                <h4 className="font-bold text-xs md:text-sm text-slate-800 break-words" title={sub.name}>
-                                  {sub.name}
-                                </h4>
-                              </div>
-                              <span className="shrink-0 font-mono text-[10px] font-bold text-blue-700 bg-white px-2 py-0.5 rounded-lg border border-blue-100/70">
-                                {sub.time}
-                              </span>
-                            </div>
-                          ))
-                        ) : (
-                          <div className="py-8 text-center text-slate-400 text-xs italic flex flex-col items-center justify-center gap-2">
-                            <Clock size={20} className="text-slate-300" />
-                            <span>{lang === 'id' ? 'Tidak ada jadwal pelajaran' : 'No classes scheduled'}</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-          </div>
-        </section>
-
-        {/* Extracurricular Section */}
-        <section id="ekstrakurikuler" className="py-24 bg-gradient-to-b from-slate-100/60 to-slate-50/30 border-t border-slate-200/60 w-full box-border overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 w-full box-border">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <span className="text-blue-600 font-bold uppercase tracking-wider text-xs bg-blue-50 px-4 py-1.5 rounded-full inline-block mb-3">
-                {lang === 'id' ? 'Minat & Bakat Siswa' : 'Talents & Hobbies'}
-              </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-blue-950 mb-3">{t.extra.title}</h2>
-              <p className="text-slate-500 text-sm md:text-base leading-relaxed">{t.extra.description}</p>
-              <div className="w-16 h-1 bg-blue-600 mx-auto rounded-full mt-4" />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full min-w-0">
-              {displayExtras.length > 0 ? displayExtras.map((extra, i) => (
-                <motion.div
-                  key={extra.id}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 }}
-                  onClick={() => setSelectedExtra(extra)}
-                  className="bg-white p-7 rounded-[2rem] shadow-sm hover:shadow-xl border border-slate-100 hover:border-blue-200 transition-all group cursor-pointer w-full min-w-0 flex flex-col justify-between box-border"
-                >
-                  <div>
-                    <div className="w-14 h-14 bg-blue-50 group-hover:bg-blue-600 rounded-2xl flex items-center justify-center text-blue-700 group-hover:text-white mb-6 transition-all duration-300 shadow-sm">
-                      {extra.icon === 'Tent' && <Tent size={28} />}
-                      {extra.icon === 'Music' && <Music size={28} />}
-                      {extra.icon === 'Cpu' && <Cpu size={28} />}
-                      {extra.icon === 'Trophy' && <Trophy size={28} />}
-                      {extra.icon === 'Palette' && <Palette size={28} />}
-                      {extra.icon === 'Target' && <Target size={28} />}
-                      {extra.icon === 'BookOpen' && <BookOpen size={28} />}
-                      {extra.icon === 'Mic2' && <Mic2 size={28} />}
-                      {extra.icon === 'Heart' && <Heart size={28} />}
-                      {extra.icon === 'Camera' && <Camera size={28} />}
-                      {extra.icon === 'Monitor' && <Monitor size={28} />}
-                      {extra.icon === 'Users' && <Users size={28} />}
-                      {extra.icon === 'Globe' && <Globe size={28} />}
-                      {(!extra.icon || extra.icon === 'Star') && <Star size={28} />}
-                    </div>
-
-                    <h3 className="font-bold text-xl text-blue-950 mb-2 group-hover:text-blue-700 transition-colors">
-                      {extra.name}
-                    </h3>
-                    <p className="text-slate-500 text-sm leading-relaxed mb-6 line-clamp-3">
-                      {extra.description}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-1.5 text-slate-500 font-medium">
-                      <Clock size={14} className="text-blue-600" />
-                      <span className="truncate max-w-[150px]">{extra.schedule || (lang === 'id' ? 'Jadwal Rutin' : 'Weekly')}</span>
-                    </div>
-                    <span className="font-bold text-blue-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                      {lang === 'id' ? 'Detail' : 'Details'} <ChevronRight size={14} />
-                    </span>
-                  </div>
-                </motion.div>
-              )) : (
-                <div className="col-span-full text-center py-12 text-slate-400 italic">
-                  {t.extra.empty}
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* Gallery Section */}
+        {/* 6. GALERI */}
         <section id="galeri" className="py-24 bg-blue-950 text-white">
           <div className="max-w-7xl mx-auto px-4 md:px-8">
             <div className="text-center mb-16">
@@ -946,42 +475,11 @@ export default function App() {
           </div>
         </section>
 
-        {/* Registration Banner */}
-        <section id="pendaftaran" className="py-20 max-w-7xl mx-auto px-4 md:px-8">
-          <div className="bg-gradient-to-br from-blue-700 to-blue-900 rounded-[3rem] p-8 md:p-16 text-center text-white relative overflow-hidden shadow-2xl">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32" />
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl -ml-32 -mb-32" />
-            
-            <div className="relative z-10">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">{t.cta.title}</h2>
-              <p className="text-blue-100 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
-                {t.cta.description}
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                <button 
-                  onClick={() => setIsRegistrationOpen(true)}
-                  className="bg-white text-blue-800 hover:bg-slate-100 px-10 py-5 rounded-full font-bold text-lg shadow-xl active:scale-95 transition-all w-full sm:w-auto"
-                >
-                  {t.cta.registerOnline}
-                </button>
-                <a 
-                  href="https://wa.me/6285939324177" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-4 group cursor-pointer"
-                >
-                  <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-colors">
-                    <Phone size={24} />
-                  </div>
-                  <div className="text-left">
-                    <p className="text-blue-200 text-xs font-bold uppercase tracking-widest">{t.cta.contactUs}</p>
-                    <p className="text-xl font-bold">085939324177</p>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* 7. PPDB */}
+        <PpdbSection lang={lang} onOpenRegistration={() => setIsRegistrationOpen(true)} />
+
+        {/* 8. DOWNLOAD */}
+        <DownloadSection lang={lang} />
 
         {/* Contact Section */}
         <section id="kontak" className="py-24 bg-white">
@@ -1112,32 +610,104 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-950 py-12 border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 text-center">
-          <div className="flex items-center gap-3 justify-center mb-6">
-            <div className="w-12 h-12 flex items-center justify-center">
-              <img 
-                src="https://lh3.googleusercontent.com/d/1sUaFfYHajE5E__zoW7DGQM9odSDDnwHg" 
-                alt="Logo SDN 1 Gapuk" 
-                className="w-full h-full object-contain"
-                referrerPolicy="no-referrer"
-              />
+      <footer className="bg-slate-950 text-white pt-16 pb-12 border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+          {/* Main Footer Sitemap Grid reflecting School Tree */}
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 pb-12 border-b border-white/10 text-left">
+            {/* School Profile Brand */}
+            <div className="col-span-2 md:col-span-4 lg:col-span-1">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-11 h-11 flex items-center justify-center bg-white rounded-xl p-1">
+                  <img 
+                    src="https://lh3.googleusercontent.com/d/1sUaFfYHajE5E__zoW7DGQM9odSDDnwHg" 
+                    alt="Logo SDN 1 Gapuk" 
+                    className="w-full h-full object-contain"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+                <div>
+                  <h3 className="font-black text-white text-base leading-tight">SDN 1 GAPUK</h3>
+                  <p className="text-[10px] text-blue-300 font-semibold tracking-wider uppercase">Suralaga, Lombok Timur</p>
+                </div>
+              </div>
+              <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                {lang === 'id' 
+                  ? 'Mewujudkan generasi unggul berprestasi, berkarakter mulia, dan berwawasan teknologi berlandaskan iman & taqwa.' 
+                  : 'Nurturing generations of excellence, noble character, and tech wisdom grounded in faith.'}
+              </p>
+              <span className="inline-block bg-blue-900/60 border border-blue-500/30 text-blue-300 font-mono text-[10px] px-2.5 py-1 rounded-md">
+                NPSN: 50202868 • AKREDITASI B
+              </span>
             </div>
-            <h1 className="font-bold text-white tracking-tight text-xl">SD NEGERI 1 GAPUK</h1>
+
+            {/* Menu: PROFIL */}
+            <div>
+              <h4 className="text-white font-bold text-xs uppercase tracking-wider mb-4 border-b border-blue-500/30 pb-2">
+                {lang === 'id' ? 'PROFIL' : 'PROFILE'}
+              </h4>
+              <ul className="space-y-2 text-xs text-slate-400">
+                <li><a href="#sejarah" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Sejarah Sekolah' : 'History'}</a></li>
+                <li><a href="#visi-misi" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Visi & Misi' : 'Vision & Mission'}</a></li>
+                <li><a href="#kepala-sekolah" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Kepala Sekolah' : 'Principal'}</a></li>
+                <li><a href="#guru-tendik" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Guru & Tendik' : 'Staff & Teachers'}</a></li>
+                <li><a href="#struktur-organisasi" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Struktur Organisasi' : 'Organization'}</a></li>
+              </ul>
+            </div>
+
+            {/* Menu: INFORMASI */}
+            <div>
+              <h4 className="text-white font-bold text-xs uppercase tracking-wider mb-4 border-b border-blue-500/30 pb-2">
+                {lang === 'id' ? 'INFORMASI' : 'INFORMATION'}
+              </h4>
+              <ul className="space-y-2 text-xs text-slate-400">
+                <li><a href="#berita" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Berita Kegiatan' : 'News'}</a></li>
+                <li><a href="#pengumuman" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Pengumuman Resmi' : 'Announcements'}</a></li>
+                <li><a href="#agenda" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Agenda Sekolah' : 'School Agenda'}</a></li>
+                <li><a href="#kalender-pendidikan" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Kalender Pendidikan' : 'Academic Calendar'}</a></li>
+              </ul>
+            </div>
+
+            {/* Menu: AKADEMIK */}
+            <div>
+              <h4 className="text-white font-bold text-xs uppercase tracking-wider mb-4 border-b border-blue-500/30 pb-2">
+                {lang === 'id' ? 'AKADEMIK' : 'ACADEMICS'}
+              </h4>
+              <ul className="space-y-2 text-xs text-slate-400">
+                <li><a href="#kurikulum" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Kurikulum Merdeka' : 'Curriculum'}</a></li>
+                <li><a href="#jadwal" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Jadwal Pelajaran' : 'Class Timetable'}</a></li>
+                <li><a href="#ekstrakurikuler" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Ekstrakurikuler' : 'Extracurriculars'}</a></li>
+              </ul>
+            </div>
+
+            {/* Menu: PRESTASI, GALERI, PPDB, DOWNLOAD, KONTAK */}
+            <div>
+              <h4 className="text-white font-bold text-xs uppercase tracking-wider mb-4 border-b border-blue-500/30 pb-2">
+                {lang === 'id' ? 'LAYANAN' : 'SERVICES'}
+              </h4>
+              <ul className="space-y-2 text-xs text-slate-400">
+                <li><a href="#prestasi" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Prestasi Siswa & Guru' : 'Achievements'}</a></li>
+                <li><a href="#galeri" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Galeri Foto' : 'Photo Gallery'}</a></li>
+                <li><a href="#ppdb" className="hover:text-amber-400 text-amber-300 font-bold transition-colors">{lang === 'id' ? 'PPDB 2026/2027' : 'Admission (PPDB)'}</a></li>
+                <li><a href="#download" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Pusat Download' : 'Download Center'}</a></li>
+                <li><a href="#kontak" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Kontak & Lokasi' : 'Contact & Location'}</a></li>
+              </ul>
+            </div>
           </div>
-          <p className="text-slate-500 text-sm mb-8">{t.footer.copyright}</p>
-          <div className="flex items-center justify-center gap-8 text-slate-400 text-xs uppercase tracking-widest font-semibold">
-            <button onClick={() => setIsPrivacyOpen(true)} className="hover:text-blue-400 transition-colors">Privacy Policy</button>
-            <button onClick={() => setIsTermsOpen(true)} className="hover:text-blue-400 transition-colors">Terms of Service</button>
-            <a href="https://rumah.pendidikan.go.id/ruang/murid" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">E-Learning</a>
-          </div>
-          <div className="mt-8">
-            <button 
-              onClick={() => setIsAdminMode(true)}
-              className="inline-flex items-center gap-2 text-[10px] text-slate-700 hover:text-blue-400 transition-colors uppercase font-bold tracking-widest"
-            >
-              <Settings size={12} /> {t.footer.loginAdmin}
-            </button>
+
+          {/* Bottom Footer bar */}
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <p>{t.footer.copyright}</p>
+            <div className="flex items-center gap-6">
+              <button onClick={() => setIsPrivacyOpen(true)} className="hover:text-blue-400 transition-colors">Privacy Policy</button>
+              <button onClick={() => setIsTermsOpen(true)} className="hover:text-blue-400 transition-colors">Terms of Service</button>
+              <a href="https://rumah.pendidikan.go.id/ruang/murid" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">E-Learning</a>
+              <button 
+                onClick={() => setIsAdminMode(true)}
+                className="inline-flex items-center gap-1.5 text-slate-400 hover:text-blue-400 transition-colors font-bold uppercase tracking-wider text-[11px]"
+              >
+                <Settings size={13} /> {t.footer.loginAdmin}
+              </button>
+            </div>
           </div>
         </div>
       </footer>

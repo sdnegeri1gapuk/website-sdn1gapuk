@@ -92,3 +92,24 @@ export interface AchievementItem {
   imageUrl?: string;
   category?: string;
 }
+
+export interface AgendaItem {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  description: string;
+  category?: string;
+}
+
+export interface DownloadItem {
+  id: string;
+  title: string;
+  category: 'Formulir' | 'Akademik' | 'Regulasi' | 'Panduan';
+  fileType: string;
+  fileSize: string;
+  date: string;
+  description?: string;
+}
+
