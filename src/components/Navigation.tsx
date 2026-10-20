@@ -55,9 +55,9 @@ export const Navigation: React.FC<NavigationProps> = ({ lang, setLang, scrolled 
       label: t.nav.profil,
       type: 'dropdown',
       items: [
+        { label: t.nav.kepalaSekolah, href: '#kepala-sekolah', icon: Award, desc: 'Sambutan resmi & profil Kepala Sekolah' },
         { label: t.nav.sejarah, href: '#sejarah', icon: Landmark, desc: 'Perjalanan & tonggak sejarah sekolah' },
         { label: t.nav.visiMisi, href: '#visi-misi', icon: Trophy, desc: 'Visi luhur dan misi pendidikan dasar' },
-        { label: t.nav.kepalaSekolah, href: '#kepala-sekolah', icon: Award, desc: 'Sambutan resmi & profil Kepala Sekolah' },
         { label: t.nav.guruTendik, href: '#guru-tendik', icon: Users, desc: 'Profil dewan guru dan tenaga kependidikan' },
         { label: t.nav.strukturOrganisasi, href: '#struktur-organisasi', icon: Network, desc: 'Bagan organisasi tata kelola sekolah' },
       ]

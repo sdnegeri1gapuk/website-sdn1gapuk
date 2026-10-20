@@ -28,17 +28,17 @@ export const ProfilSection: React.FC<ProfilSectionProps> = ({
   const activeHistory = schoolHistory || SCHOOL_HISTORY;
   const activeOrg = orgStructure && orgStructure.length > 0 ? orgStructure : ORG_STRUCTURE;
 
-  const [activeTab, setActiveTab] = useState<'sejarah' | 'visi' | 'kepala' | 'guru' | 'struktur'>('sejarah');
+  const [activeTab, setActiveTab] = useState<'sejarah' | 'visi' | 'kepala' | 'guru' | 'struktur'>('kepala');
   const staffScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash;
-      if (hash === '#sejarah') setActiveTab('sejarah');
-      else if (hash === '#visi-misi') setActiveTab('visi');
-      else if (hash === '#kepala-sekolah') setActiveTab('kepala');
-      else if (hash === '#guru-tendik') setActiveTab('guru');
-      else if (hash === '#struktur-organisasi') setActiveTab('struktur');
+      if (hash === '#kepala-sekolah' || hash === '#kepala' || hash === '#profil') setActiveTab('kepala');
+      else if (hash === '#sejarah') setActiveTab('sejarah');
+      else if (hash === '#visi-misi' || hash === '#visi') setActiveTab('visi');
+      else if (hash === '#guru-tendik' || hash === '#guru') setActiveTab('guru');
+      else if (hash === '#struktur-organisasi' || hash === '#struktur') setActiveTab('struktur');
     };
     handleHash();
     window.addEventListener('hashchange', handleHash);
@@ -56,9 +56,9 @@ export const ProfilSection: React.FC<ProfilSectionProps> = ({
   };
 
   const tabs = [
+    { id: 'kepala', label: lang === 'id' ? 'Kepala Sekolah' : 'Principal', icon: Award, hash: '#kepala-sekolah' },
     { id: 'sejarah', label: lang === 'id' ? 'Sejarah' : 'History', icon: Landmark, hash: '#sejarah' },
     { id: 'visi', label: lang === 'id' ? 'Visi & Misi' : 'Vision & Mission', icon: Trophy, hash: '#visi-misi' },
-    { id: 'kepala', label: lang === 'id' ? 'Kepala Sekolah' : 'Principal', icon: Award, hash: '#kepala-sekolah' },
     { id: 'guru', label: lang === 'id' ? 'Guru & Tendik' : 'Staff & Teachers', icon: Users, hash: '#guru-tendik' },
     { id: 'struktur', label: lang === 'id' ? 'Struktur Organisasi' : 'Organization', icon: Network, hash: '#struktur-organisasi' },
   ];

@@ -166,9 +166,19 @@ export interface CurriculumInfo {
 export interface CalendarEvent {
   date: string;
   title: string;
+  no?: number;
+  month?: string;
+  duration?: string;
+  semester?: string;
+  status?: string;
+  category?: string;
 }
 
 export interface AcademicCalendarInfo {
+  year?: string;
+  title?: string;
+  totalAgenda?: string;
+  totalDays?: string;
   semesterGanjil: {
     period: string;
     events: CalendarEvent[];

@@ -248,52 +248,107 @@ export const InformasiSection: React.FC<InformasiSectionProps> = ({
 
         {/* TAB 4: Kalender Pendidikan */}
         {activeTab === 'kalender' && (
-          <div id="kalender-pendidikan" className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {/* Semester Ganjil */}
-            <div className="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
-              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-                <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold">
-                  <CalendarIcon size={20} />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg text-blue-950">Semester Ganjil</h3>
-                  <p className="text-xs text-slate-400">{activeCalendar.semesterGanjil?.period || 'Juli - Desember'}</p>
-                </div>
+          <div id="kalender-pendidikan" className="space-y-6 max-w-5xl mx-auto">
+            {activeCalendar.year && (
+              <div className="text-center">
+                <span className="px-4 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-blue-900 border border-blue-200 inline-flex items-center gap-2">
+                  <CalendarIcon size={14} className="text-blue-700" />
+                  Tahun Ajaran {activeCalendar.year} • {activeCalendar.totalAgenda || `${(activeCalendar.semesterGanjil?.events?.length || 0) + (activeCalendar.semesterGenap?.events?.length || 0)} Agenda`}
+                </span>
               </div>
+            )}
 
-              <div className="space-y-3.5">
-                {(activeCalendar.semesterGanjil?.events || []).map((ev, i) => (
-                  <div key={i} className="flex items-start gap-3 text-xs">
-                    <span className="font-mono font-bold text-blue-700 shrink-0 w-32 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">
-                      {ev.date}
-                    </span>
-                    <span className="text-slate-700 font-medium pt-0.5">{ev.title}</span>
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Semester Ganjil */}
+              <div className="bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-sm flex flex-col">
+                <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold">
+                      <CalendarIcon size={20} />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg text-blue-950">Semester Ganjil</h3>
+                      <p className="text-xs text-slate-400">{activeCalendar.semesterGanjil?.period || 'Juli - Desember'}</p>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Semester Genap */}
-            <div className="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
-              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
-                <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold">
-                  <CalendarIcon size={20} />
+                  <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-xl">
+                    {activeCalendar.semesterGanjil?.events?.length || 0} Kegiatan
+                  </span>
                 </div>
-                <div>
-                  <h3 className="font-bold text-lg text-blue-950">Semester Genap</h3>
-                  <p className="text-xs text-slate-400">{activeCalendar.semesterGenap?.period || 'Januari - Juni'}</p>
+
+                <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+                  {(activeCalendar.semesterGanjil?.events || []).map((ev, i) => (
+                    <div key={i} className="p-3 rounded-2xl bg-slate-50/80 border border-slate-100 hover:border-blue-200 transition-all space-y-1">
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <span className="font-mono font-bold text-xs text-blue-700 bg-white px-2.5 py-0.5 rounded-lg border border-slate-200 shadow-xs">
+                          {ev.date}
+                        </span>
+                        <div className="flex items-center gap-1.5">
+                          {ev.duration && (
+                            <span className="text-[10px] font-bold text-slate-500 bg-slate-200/70 px-2 py-0.5 rounded-md">
+                              {ev.duration}
+                            </span>
+                          )}
+                          {ev.status && (
+                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-md">
+                              {ev.status}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-slate-800 font-semibold text-xs pt-0.5">{ev.title}</p>
+                    </div>
+                  ))}
+                  {(activeCalendar.semesterGanjil?.events || []).length === 0 && (
+                    <p className="text-center py-8 text-xs text-slate-400 italic">Belum ada agenda semester ganjil.</p>
+                  )}
                 </div>
               </div>
 
-              <div className="space-y-3.5">
-                {(activeCalendar.semesterGenap?.events || []).map((ev, i) => (
-                  <div key={i} className="flex items-start gap-3 text-xs">
-                    <span className="font-mono font-bold text-indigo-700 shrink-0 w-32 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">
-                      {ev.date}
-                    </span>
-                    <span className="text-slate-700 font-medium pt-0.5">{ev.title}</span>
+              {/* Semester Genap */}
+              <div className="bg-white rounded-3xl p-6 md:p-8 border border-slate-100 shadow-sm flex flex-col">
+                <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold">
+                      <CalendarIcon size={20} />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg text-blue-950">Semester Genap</h3>
+                      <p className="text-xs text-slate-400">{activeCalendar.semesterGenap?.period || 'Januari - Juni'}</p>
+                    </div>
                   </div>
-                ))}
+                  <span className="text-xs font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-xl">
+                    {activeCalendar.semesterGenap?.events?.length || 0} Kegiatan
+                  </span>
+                </div>
+
+                <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+                  {(activeCalendar.semesterGenap?.events || []).map((ev, i) => (
+                    <div key={i} className="p-3 rounded-2xl bg-slate-50/80 border border-slate-100 hover:border-indigo-200 transition-all space-y-1">
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <span className="font-mono font-bold text-xs text-indigo-700 bg-white px-2.5 py-0.5 rounded-lg border border-slate-200 shadow-xs">
+                          {ev.date}
+                        </span>
+                        <div className="flex items-center gap-1.5">
+                          {ev.duration && (
+                            <span className="text-[10px] font-bold text-slate-500 bg-slate-200/70 px-2 py-0.5 rounded-md">
+                              {ev.duration}
+                            </span>
+                          )}
+                          {ev.status && (
+                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100/70 px-2 py-0.5 rounded-md">
+                              {ev.status}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-slate-800 font-semibold text-xs pt-0.5">{ev.title}</p>
+                    </div>
+                  ))}
+                  {(activeCalendar.semesterGenap?.events || []).length === 0 && (
+                    <p className="text-center py-8 text-xs text-slate-400 italic">Belum ada agenda semester genap.</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>

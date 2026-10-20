@@ -697,9 +697,9 @@ export default function App() {
                 {lang === 'id' ? 'PROFIL' : 'PROFILE'}
               </h4>
               <ul className="space-y-2 text-xs text-slate-400">
+                <li><a href="#kepala-sekolah" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Kepala Sekolah' : 'Principal'}</a></li>
                 <li><a href="#sejarah" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Sejarah Sekolah' : 'History'}</a></li>
                 <li><a href="#visi-misi" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Visi & Misi' : 'Vision & Mission'}</a></li>
-                <li><a href="#kepala-sekolah" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Kepala Sekolah' : 'Principal'}</a></li>
                 <li><a href="#guru-tendik" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Guru & Tendik' : 'Staff & Teachers'}</a></li>
                 <li><a href="#struktur-organisasi" className="hover:text-blue-400 transition-colors">{lang === 'id' ? 'Struktur Organisasi' : 'Organization'}</a></li>
               </ul>
