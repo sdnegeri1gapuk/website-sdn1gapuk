@@ -901,7 +901,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                     <input required className="w-full bg-slate-50 rounded-2xl p-4 outline-none" placeholder="Judul Berita" value={editingItem?.title || ''} onChange={e => setEditingItem({...editingItem, title: e.target.value})} />
                     <div className="grid grid-cols-2 gap-4">
                       <input required className="w-full bg-slate-50 rounded-2xl p-4 outline-none" placeholder="Tanggal" value={editingItem?.date || ''} onChange={e => setEditingItem({...editingItem, date: e.target.value})} />
-                      <input required className="w-full bg-slate-50 rounded-2xl p-4 outline-none" placeholder="Kategori" value={editingItem?.category || ''} onChange={e => setEditingItem({...editingItem, category: e.target.value})} />
+                      <div>
+                        <input 
+                          required 
+                          list="news-category-list"
+                          className="w-full bg-slate-50 rounded-2xl p-4 outline-none" 
+                          placeholder="Kategori (Contoh: Berita / Kegiatan / Prestasi / Pengumuman)" 
+                          value={editingItem?.category || ''} 
+                          onChange={e => setEditingItem({...editingItem, category: e.target.value})} 
+                        />
+                        <datalist id="news-category-list">
+                          <option value="Berita" />
+                          <option value="Kegiatan" />
+                          <option value="Prestasi" />
+                          <option value="Pengumuman" />
+                          <option value="Himbauan" />
+                          <option value="Akademik" />
+                        </datalist>
+                      </div>
                     </div>
                     <div className="space-y-4">
                       <div className="flex flex-col gap-2">

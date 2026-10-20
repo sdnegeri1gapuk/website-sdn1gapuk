@@ -41,9 +41,18 @@ export const InformasiSection: React.FC<InformasiSectionProps> = ({
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
-
-  const beritaItems = newsList.filter(n => n.category?.toLowerCase() !== 'pengumuman');
-  const pengumumanItems = newsList.filter(n => n.category?.toLowerCase() === 'pengumuman');
+  const beritaItems = newsList;
+  const pengumumanItems = newsList.filter(n => {
+    const cat = (n.category || '').toLowerCase().trim();
+    return (
+      cat === 'pengumuman' ||
+      cat === 'announcement' ||
+      cat === 'himbauan' ||
+      cat === 'notice' ||
+      cat === 'edaran' ||
+      cat === 'circular'
+    );
+  });
 
   const tabs = [
     { id: 'berita', label: lang === 'id' ? 'Berita Kegiatan' : 'News', icon: Newspaper, hash: '#berita' },
@@ -159,7 +168,7 @@ export const InformasiSection: React.FC<InformasiSectionProps> = ({
                 ))
               ) : (
                 <div className="col-span-full py-16 text-center text-slate-400 italic">
-                  Belum ada berita yang dipublikasikan.
+                  {lang === 'id' ? 'Belum ada berita yang dipublikasikan.' : 'No news published yet.'}
                 </div>
               )}
             </div>
