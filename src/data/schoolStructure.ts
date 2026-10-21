@@ -190,7 +190,8 @@ export const DOWNLOAD_ITEMS: DownloadItem[] = [
     fileType: 'PDF',
     fileSize: '245 KB',
     date: 'Mei 2026',
-    description: 'Format formulir cetak pendaftaran calon siswa baru jalur offline.'
+    description: 'Format formulir cetak pendaftaran calon siswa baru jalur offline.',
+    fileUrl: 'https://drive.google.com/file/d/1LXZ0r2Ct1MsieN8hGs8ZbVwNvKGKqjM6/view?usp=drive_link'
   },
   {
     id: 'dl-2',
@@ -199,7 +200,8 @@ export const DOWNLOAD_ITEMS: DownloadItem[] = [
     fileType: 'PDF',
     fileSize: '410 KB',
     date: 'Juli 2026',
-    description: 'Buku panduan tata tertib, hak, dan kewajiban peserta didik selama menempuh pendidikan.'
+    description: 'Buku panduan tata tertib, hak, dan kewajiban peserta didik selama menempuh pendidikan.',
+    fileUrl: 'https://drive.google.com/file/d/1aTlIRHNlIWR1tuF27jO5l_GbNkZpm_1r/view?usp=drive_link'
   },
   {
     id: 'dl-3',
@@ -208,7 +210,8 @@ export const DOWNLOAD_ITEMS: DownloadItem[] = [
     fileType: 'PDF',
     fileSize: '680 KB',
     date: 'Juni 2026',
-    description: 'Jadwal hari efektif sekolah, jadwal ujian, dan kalender libur semester.'
+    description: 'Jadwal hari efektif sekolah, jadwal ujian, dan kalender libur semester.',
+    fileUrl: 'https://drive.google.com/file/d/1I-jI9Vx-1PHFb1oxXfxSvwT73bhRHV3K/view?usp=drive_link'
   },
   {
     id: 'dl-4',
@@ -217,7 +220,8 @@ export const DOWNLOAD_ITEMS: DownloadItem[] = [
     fileType: 'PDF',
     fileSize: '1.2 MB',
     date: 'Januari 2026',
-    description: 'Buku panduan pelaksanaan projek penguatan profil pelajar Pancasila bagi orang tua dan murid.'
+    description: 'Buku panduan pelaksanaan projek penguatan profil pelajar Pancasila bagi orang tua dan murid.',
+    fileUrl: 'https://drive.google.com/file/d/1LYm8uLabEC5-D8HvXNUd6nWby1gW77F9/view?usp=drive_link'
   },
   {
     id: 'dl-5',
@@ -226,7 +230,8 @@ export const DOWNLOAD_ITEMS: DownloadItem[] = [
     fileType: 'DOCX',
     fileSize: '115 KB',
     date: 'Mei 2026',
-    description: 'Format surat pernyataan persetujuan tata tertib dan partisipasi sekolah.'
+    description: 'Format surat pernyataan persetujuan tata tertib dan partisipasi sekolah.',
+    fileUrl: 'https://docs.google.com/document/d/1xFmalAFQBOJBnGpeOz0c0zpZZZk5M63J/edit?usp=drive_link&ouid=104782496677803943355&rtpof=true&sd=true'
   }
 ];
 

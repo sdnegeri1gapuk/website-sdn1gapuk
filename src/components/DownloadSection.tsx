@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { FileText, Download, CheckCircle, Search, Filter } from 'lucide-react';
+import { FileText, Download, CheckCircle, Search, Filter, ExternalLink } from 'lucide-react';
 import { DOWNLOAD_ITEMS } from '../data/schoolStructure';
 import { DownloadItem } from '../types';
+import { isGoogleDriveUrl, triggerFileDownload, getGoogleDrivePreviewUrl } from '../lib/driveUtils';
 
 interface DownloadSectionProps {
   lang: 'id' | 'en';
@@ -26,47 +27,10 @@ export const DownloadSection: React.FC<DownloadSectionProps> = ({ lang, download
 
   const handleDownload = (item: DownloadItem) => {
     setDownloadingId(item.id);
-
-    // Create a formatted printable/downloadable text or file blob
-    const content = `=====================================================
-PEMERINTAH KABUPATEN LOMBOK TIMUR
-DINAS PENDIDIKAN DAN KEBUDAYAAN
-SD NEGERI 1 GAPUK
-Alamat: Dusun Gapuk Baru, Desa Gapuk, Kec. Suralaga, Kab. Lombok Timur
-=====================================================
-
-DOKUMEN RESMI SEKOLAH
-Nama Dokumen : ${item.title}
-Kategori     : ${item.category}
-Format File  : ${item.fileType}
-Ukuran       : ${item.fileSize}
-Tanggal Rilis: ${item.date}
-
-DESKRIPSI:
-${item.description || 'Dokumen resmi diterbitkan oleh SD Negeri 1 Gapuk.'}
-
------------------------------------------------------
-Catatan: Dokumen ini diterbitkan secara resmi melalui Portal Web SDN 1 Gapuk.
-Untuk verifikasi keabsahan dokumen fisik, silakan hubungi bagian tata usaha sekolah.
-
-SD NEGERI 1 GAPUK
-NPSN: 50202868 | Terakreditasi B
-=====================================================
-`;
-
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${item.title.replace(/[/\\?%*:|"<>]/g, '_')}.${item.fileType.toLowerCase() === 'pdf' ? 'txt' : 'doc'}`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-
+    triggerFileDownload(item, lang);
     setTimeout(() => {
       setDownloadingId(null);
-    }, 1200);
+    }, 1500);
   };
 
   return (
@@ -133,11 +97,18 @@ NPSN: 50202868 | Terakreditasi B
                 className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="font-mono text-[10px] font-black uppercase px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700">
-                      {item.fileType} • {item.fileSize}
-                    </span>
-                    <span className="text-[11px] font-semibold text-slate-400">
+                  <div className="flex items-center justify-between mb-4 gap-2">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="font-mono text-[10px] font-black uppercase px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700">
+                        {item.fileType} • {item.fileSize}
+                      </span>
+                      {item.fileUrl && isGoogleDriveUrl(item.fileUrl) && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center gap-1">
+                          Google Drive
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-[11px] font-semibold text-slate-400 shrink-0">
                       {item.date}
                     </span>
                   </div>
@@ -163,11 +134,11 @@ NPSN: 50202868 | Terakreditasi B
                   )}
                 </div>
 
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                <div className="pt-4 border-t border-slate-100 flex items-center gap-2">
                   <button
                     onClick={() => handleDownload(item)}
                     disabled={downloadingId === item.id}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-blue-600 text-slate-700 hover:text-white font-bold text-xs transition-all active:scale-95 group-hover:bg-blue-600 group-hover:text-white shadow-xs"
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-blue-600 text-slate-700 hover:text-white font-bold text-xs transition-all active:scale-95 group-hover:bg-blue-600 group-hover:text-white shadow-xs cursor-pointer"
                   >
                     {downloadingId === item.id ? (
                       <>
@@ -181,6 +152,18 @@ NPSN: 50202868 | Terakreditasi B
                       </>
                     )}
                   </button>
+
+                  {item.fileUrl && (
+                    <a
+                      href={getGoogleDrivePreviewUrl(item.fileUrl)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2.5 rounded-xl bg-slate-50 hover:bg-slate-200 text-slate-400 hover:text-blue-600 transition-colors shrink-0"
+                      title={lang === 'id' ? 'Pratinjau / Buka di Google Drive' : 'Preview / Open in Google Drive'}
+                    >
+                      <ExternalLink size={15} />
+                    </a>
+                  )}
                 </div>
               </motion.div>
             ))

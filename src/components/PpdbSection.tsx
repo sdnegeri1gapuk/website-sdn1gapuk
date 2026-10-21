@@ -1,20 +1,33 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { UserCheck, FileCheck, ArrowRight, Download, Calendar, ShieldCheck, Users, HelpCircle } from 'lucide-react';
-import { PPDB_REQUIREMENTS, PPDB_FLOW } from '../data/schoolStructure';
-import { PpdbSettings } from '../types';
+import { DOWNLOAD_ITEMS, PPDB_REQUIREMENTS, PPDB_FLOW } from '../data/schoolStructure';
+import { DownloadItem, PpdbSettings } from '../types';
+import { triggerFileDownload } from '../lib/driveUtils';
 
 interface PpdbSectionProps {
   lang: 'id' | 'en';
   onOpenRegistration: () => void;
   ppdbData?: PpdbSettings;
+  downloadList?: DownloadItem[];
 }
 
-export const PpdbSection: React.FC<PpdbSectionProps> = ({ lang, onOpenRegistration, ppdbData }) => {
+export const PpdbSection: React.FC<PpdbSectionProps> = ({ lang, onOpenRegistration, ppdbData, downloadList }) => {
   const activeReqs = ppdbData?.requirements && ppdbData.requirements.length > 0 ? ppdbData.requirements : PPDB_REQUIREMENTS;
   const activeFlow = ppdbData?.flow && ppdbData.flow.length > 0 ? ppdbData.flow : PPDB_FLOW;
 
   const downloadFormTemplate = () => {
+    const list = downloadList && downloadList.length > 0 ? downloadList : DOWNLOAD_ITEMS;
+    const ppdbDoc = list.find(d => 
+      d.title.toLowerCase().includes('ppdb') || 
+      d.title.toLowerCase().includes('pendaftaran') ||
+      d.id === 'dl-1'
+    );
+    if (ppdbDoc && ppdbDoc.fileUrl) {
+      triggerFileDownload(ppdbDoc, lang);
+      return;
+    }
+
     const content = `=====================================================
 FORMULIR PENDAFTARAN PESERTA DIDIK BARU (PPDB)
 SD NEGERI 1 GAPUK TAHUN AJARAN 2026/2027

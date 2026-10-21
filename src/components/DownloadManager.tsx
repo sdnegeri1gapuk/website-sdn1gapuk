@@ -3,6 +3,7 @@ import { Download, Plus, Edit2, Trash2, Save, RotateCcw, FileText, ExternalLink,
 import { syncData, collections } from '../lib/dataService';
 import { DOWNLOAD_ITEMS } from '../data/schoolStructure';
 import { DownloadItem } from '../types';
+import { isGoogleDriveUrl, getGoogleDrivePreviewUrl, triggerFileDownload } from '../lib/driveUtils';
 
 export const DownloadManager: React.FC = () => {
   const [downloads, setDownloads] = useState<DownloadItem[]>([]);
@@ -168,9 +169,20 @@ export const DownloadManager: React.FC = () => {
                 </span>
                 <span className="text-xs text-slate-400 font-semibold">{item.fileSize}</span>
                 <span className="text-xs text-slate-400">• Rilis: {item.date}</span>
-                {item.fileUrl && (
-                  <span className="text-xs font-bold text-emerald-600 flex items-center gap-1">
-                    <ExternalLink size={12} /> Link Eksternal Aktif
+                {item.fileUrl ? (
+                  isGoogleDriveUrl(item.fileUrl) ? (
+                    <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200 flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                      Google Drive Terhubung
+                    </span>
+                  ) : (
+                    <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-200 flex items-center gap-1">
+                      <ExternalLink size={12} /> Link File Aktif
+                    </span>
+                  )
+                ) : (
+                  <span className="text-xs text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+                    Template Otomatis
                   </span>
                 )}
               </div>
@@ -178,11 +190,31 @@ export const DownloadManager: React.FC = () => {
               <p className="text-xs text-slate-600 leading-relaxed max-w-2xl">{item.description}</p>
             </div>
 
-            <div className="flex gap-2 shrink-0 self-end md:self-center">
+            <div className="flex items-center gap-1.5 shrink-0 self-end md:self-center">
+              <button
+                type="button"
+                onClick={() => triggerFileDownload(item)}
+                className="p-2 text-violet-600 hover:bg-violet-100 rounded-xl transition-colors"
+                title="Uji Unduh Berkas"
+              >
+                <Download size={16} />
+              </button>
+              {item.fileUrl && (
+                <a
+                  href={getGoogleDrivePreviewUrl(item.fileUrl)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-xl transition-colors"
+                  title="Buka / Pratinjau Link"
+                >
+                  <ExternalLink size={16} />
+                </a>
+              )}
               <button
                 type="button"
                 onClick={() => openEditModal(item)}
                 className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
+                title="Edit Dokumen"
               >
                 <Edit2 size={16} />
               </button>
@@ -190,6 +222,7 @@ export const DownloadManager: React.FC = () => {
                 type="button"
                 onClick={() => handleDelete(item.id)}
                 className="p-2 text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                title="Hapus Dokumen"
               >
                 <Trash2 size={16} />
               </button>
@@ -308,20 +341,37 @@ export const DownloadManager: React.FC = () => {
                 />
               </div>
 
-              <div>
-                <label className="text-xs font-bold text-slate-500 block mb-1">
-                  Link Berkas / Google Drive (Opsional)
-                </label>
+              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-2">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-bold text-slate-700 block">
+                    Link File Google Drive (Direkomendasikan)
+                  </label>
+                  {form.fileUrl && form.fileUrl.trim() && (
+                    <a
+                      href={getGoogleDrivePreviewUrl(form.fileUrl)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] font-bold text-violet-600 hover:text-violet-800 flex items-center gap-1"
+                    >
+                      <ExternalLink size={12} /> Buka / Uji Link
+                    </a>
+                  )}
+                </div>
                 <input
-                  type="text"
-                  placeholder="https://drive.google.com/... (Kosongkan jika ingin generate formulir otomatis)"
+                  type="url"
+                  placeholder="https://drive.google.com/file/d/... atau https://docs.google.com/..."
                   value={form.fileUrl || ''}
                   onChange={e => setForm({ ...form, fileUrl: e.target.value })}
-                  className="w-full bg-slate-50 rounded-xl p-3 text-xs border border-slate-200 outline-none focus:border-violet-500"
+                  className="w-full bg-white rounded-xl p-3 text-xs border border-slate-200 outline-none focus:border-violet-500 font-mono text-slate-800"
                 />
-                <p className="text-[10px] text-slate-400 mt-1">
-                  Jika dikosongkan, tombol unduh di website akan otomatis men-generate file resmi ber-kop SDN 1 Gapuk.
-                </p>
+                <div className="text-[11px] text-slate-500 leading-relaxed bg-white/70 p-2.5 rounded-xl border border-slate-100">
+                  <span className="font-bold text-emerald-700">💡 Cara Penggunaan Google Drive:</span>
+                  <ul className="list-disc list-inside mt-1 space-y-0.5 text-slate-600">
+                    <li>Salin link berkas dari Google Drive Anda (klik <em>Bagikan / Share</em>).</li>
+                    <li>Pastikan akses diatur ke: <strong>&quot;Siapa saja yang memiliki link dapat melihat&quot;</strong>.</li>
+                    <li>File Google Drive (PDF, Word, Excel, dsb.) akan langsung diunduh secara otomatis oleh pengunjung saat tombol unduh ditekan.</li>
+                  </ul>
+                </div>
               </div>
 
               <div className="flex justify-end gap-3 pt-3 border-t border-slate-100">

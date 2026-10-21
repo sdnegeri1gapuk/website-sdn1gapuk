@@ -527,7 +527,7 @@ export default function App() {
         </section>
 
         {/* 7. PPDB */}
-        <PpdbSection lang={lang} onOpenRegistration={() => setIsRegistrationOpen(true)} ppdbData={ppdbData} />
+        <PpdbSection lang={lang} onOpenRegistration={() => setIsRegistrationOpen(true)} ppdbData={ppdbData} downloadList={downloadsData} />
 
         {/* 8. DOWNLOAD */}
         <DownloadSection lang={lang} downloadList={downloadsData} />
